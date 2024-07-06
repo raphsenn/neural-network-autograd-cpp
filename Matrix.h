@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <vector>
 #include <cstddef>
 #include <iostream>
 
@@ -24,13 +25,25 @@ private:
   void fillRandom();
 
 public:
-
+  // Constructor.
   Matrix(std::size_t rows, std::size_t cols, InitState state = InitState::RANDOM);
+
+  // Copy-Constructor for Matrix<T>.
+  Matrix(Matrix<T>& matrix);
+
+  // Copy-Constructor for 2D vector (std::vector<std::vector<T>>).
+  Matrix(std::vector<std::vector<T>>& matrix);
+  
   ~Matrix();
 
-  // Matrix access.
+  // Operators:
+  // Matrix access (for testing purpose only).
   T* operator[](std::size_t row);
   const T* operator[](std::size_t col) const;
+
+  // Matrix operations.
+  // Operator for operation: Addition
+  void operator+(const Matrix<T>& other) const;
 
   // Returns number of rows.
   std::size_t getRows() const;
