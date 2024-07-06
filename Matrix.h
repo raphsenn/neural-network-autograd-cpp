@@ -49,13 +49,13 @@ public:
 
   // ____________________________________________________________________________
   // Linear Algebra
+  // ____________________________________________________________________________
  
   // Performs matrix addition.
   void add(const Matrix<T>& other) const;
 
   // Performs matrix multiplication. 
   void dot(const Matrix<T>& other) const;
- 
 
   // Returns number of rows.
   std::size_t getRows() const;

@@ -172,7 +172,7 @@ template <typename T>
 void Matrix<T>::fillRandom() {
   for (size_t row = 0; row < rows_; ++row) {
     for (size_t col = 0; col < cols_; ++col) {
-      matrix_[row][col] = rand() % 1000;
+      matrix_[row][col] = random_value<T>::value();
     }
   }
 }
