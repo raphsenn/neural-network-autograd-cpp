@@ -24,7 +24,7 @@ Matrix<T>::Matrix(std::size_t rows, std::size_t cols, InitState state) : rows_(r
 
 // ____________________________________________________________________________
 template <typename T>
-Matrix<T>::Matrix(Matrix<T>& matrix) {
+Matrix<T>::Matrix(const Matrix<T>& matrix) {
   rows_ = matrix.rows_; 
   cols_ = matrix.cols_; 
 
@@ -44,7 +44,7 @@ Matrix<T>::Matrix(Matrix<T>& matrix) {
 
 // ____________________________________________________________________________
 template <typename T>
-Matrix<T>::Matrix(std::vector<std::vector<T>>& matrix) {
+Matrix<T>::Matrix(const std::vector<std::vector<T>>& matrix) {
   rows_ = static_cast<size_t>( matrix.size());
   cols_ = static_cast<size_t>( matrix[0].size());
   
@@ -74,7 +74,48 @@ Matrix<T>::~Matrix() {
 
 // ____________________________________________________________________________
 template <typename T>
-T* Matrix<T>::operator[](std::size_t row) {
+void Matrix<T>::operator=(const Matrix& other) {
+  // Handle self assignment. 
+  if (this == &other) { return; }
+  
+  // Deallocate memory. 
+  for (std::size_t row = 0; row < rows_; ++row) {
+    delete[] matrix_[row];
+  }
+  delete[] matrix_;
+
+  // Perform copy.
+  rows_ = other.rows_;
+  cols_ = other.cols_;
+  for (size_t row = 0; row < rows_; ++row) {
+    for (size_t col = 0; col < cols_; ++col) {
+      matrix_[row][col] = other.matrix_[row][col];
+    }
+  }
+}
+
+// ____________________________________________________________________________
+template <typename T>
+void Matrix<T>::operator=(const std::vector<std::vector<T>> other) {
+  // Deallocate memory. 
+  for (std::size_t row = 0; row < rows_; ++row) {
+    delete[] matrix_[row];
+  }
+  delete[] matrix_;
+
+  // Perform copy.
+  rows_ = static_cast<size_t> (other.size());
+  cols_ = static_cast<size_t> (other[0].size());
+  for (size_t row = 0; row < rows_; ++row) {
+    for (size_t col = 0; col < cols_; ++col) {
+      matrix_[row][col] = other[row][col];
+    }
+  }
+}
+
+// ____________________________________________________________________________
+template <typename T>
+T* Matrix<T>::operator[](const std::size_t row) {
   // Handle if row >= rows_. 
   if (row >= rows_) { throw std::out_of_range("Row index out of range"); }
   return matrix_[row];
@@ -82,7 +123,7 @@ T* Matrix<T>::operator[](std::size_t row) {
 
 // ____________________________________________________________________________
 template <typename T>
-const T* Matrix<T>::operator[](std::size_t col) const {
+const T* Matrix<T>::operator[](const std::size_t col) const {
   // Handle if col >= cols_. 
   if (col >= cols_) { throw std::out_of_range("Row index out of range"); }
   return matrix_[col];
@@ -90,7 +131,17 @@ const T* Matrix<T>::operator[](std::size_t col) const {
 
 // ____________________________________________________________________________
 template <typename T>
-void Matrix<T>::operator+(const Matrix<T>& other) const {
+void Matrix<T>::add(const Matrix<T>& other) const {
+  for (size_t row = 0; row < rows_; ++row) {
+    for (size_t col = 0; col < cols_; ++col) {
+      matrix_[row][col] = matrix_[row][col] + other.matrix_[row][col];
+    }
+  }
+}
+
+// ____________________________________________________________________________
+template <typename T>
+void Matrix<T>::dot(const Matrix<T>& other) const {
   for (size_t row = 0; row < rows_; ++row) {
     for (size_t col = 0; col < cols_; ++col) {
       matrix_[row][col] = matrix_[row][col] + other.matrix_[row][col];

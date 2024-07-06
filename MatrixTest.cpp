@@ -47,10 +47,57 @@ TEST(ConstructorThrowInvalidArgument, Matrix) {
 
 // ____________________________________________________________________________
 TEST(CopyConstructorVector, Matrix) {
-  std::vector<std::vector<int>> vector = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
-  Matrix<int> A(vector);
+  std::vector<std::vector<int>> vectorA = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+  Matrix<int> A(vectorA);
+  ASSERT_EQ(A[0][0], 1);
+  ASSERT_EQ(A[0][1], 2);
+  ASSERT_EQ(A[0][2], 3);
+  ASSERT_EQ(A[1][0], 4);
+  ASSERT_EQ(A[1][1], 5);
+  ASSERT_EQ(A[1][2], 6);
+  ASSERT_EQ(A[2][0], 7);
+  ASSERT_EQ(A[2][1], 8);
+  ASSERT_EQ(A[2][2], 9);
+
+  std::vector<std::vector<float>> vectorB = {{0.1f, 0.2f, 0.3f}, {0.4f, 0.5f, 0.6f}, {0.7f, 0.8f, 0.9f}};
+  Matrix<float> B(vectorB);
+  ASSERT_FLOAT_EQ(B[0][0], 0.1f);
+  ASSERT_FLOAT_EQ(B[0][1], 0.2f);
+  ASSERT_FLOAT_EQ(B[0][2], 0.3f);
+  ASSERT_FLOAT_EQ(B[1][0], 0.4f);
+  ASSERT_FLOAT_EQ(B[1][1], 0.5f);
+  ASSERT_FLOAT_EQ(B[1][2], 0.6f);
+  ASSERT_FLOAT_EQ(B[2][0], 0.7f);
+  ASSERT_FLOAT_EQ(B[2][1], 0.8f);
+  ASSERT_FLOAT_EQ(B[2][2], 0.9f);
 }
 
+// ____________________________________________________________________________
+TEST(CopyAssignmentVector, Matrix) {
+  std::vector<std::vector<int>> vectorA = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+  Matrix<int> A = vectorA;
+  ASSERT_EQ(A[0][0], 1);
+  ASSERT_EQ(A[0][1], 2);
+  ASSERT_EQ(A[0][2], 3);
+  ASSERT_EQ(A[1][0], 4);
+  ASSERT_EQ(A[1][1], 5);
+  ASSERT_EQ(A[1][2], 6);
+  ASSERT_EQ(A[2][0], 7);
+  ASSERT_EQ(A[2][1], 8);
+  ASSERT_EQ(A[2][2], 9);
+
+  std::vector<std::vector<float>> vectorB = {{0.1f, 0.2f, 0.3f}, {0.4f, 0.5f, 0.6f}, {0.7f, 0.8f, 0.9f}};
+  Matrix<float> B = vectorB;
+  ASSERT_FLOAT_EQ(B[0][0], 0.1f);
+  ASSERT_FLOAT_EQ(B[0][1], 0.2f);
+  ASSERT_FLOAT_EQ(B[0][2], 0.3f);
+  ASSERT_FLOAT_EQ(B[1][0], 0.4f);
+  ASSERT_FLOAT_EQ(B[1][1], 0.5f);
+  ASSERT_FLOAT_EQ(B[1][2], 0.6f);
+  ASSERT_FLOAT_EQ(B[2][0], 0.7f);
+  ASSERT_FLOAT_EQ(B[2][1], 0.8f);
+  ASSERT_FLOAT_EQ(B[2][2], 0.9f);
+}
 
 TEST(Print, Matrix) {
   Matrix<float> A(1, 1, InitState::ZERO);
@@ -73,7 +120,20 @@ TEST(Print, Matrix) {
 // ____________________________________________________________________________ 
 
 TEST(Addition, Matrix) {
-
+  std::vector<std::vector<int>> vector = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+  
+  Matrix<int> A = vector;
+  Matrix<int> B = vector;
+  A.add(B);
+  ASSERT_EQ(A[0][0], 2);
+  ASSERT_EQ(A[0][1], 4);
+  ASSERT_EQ(A[0][2], 6);
+  ASSERT_EQ(A[1][0], 8);
+  ASSERT_EQ(A[1][1], 10);
+  ASSERT_EQ(A[1][2], 12);
+  ASSERT_EQ(A[2][0], 14);
+  ASSERT_EQ(A[2][1], 16);
+  ASSERT_EQ(A[2][2], 18);
 }
 
 

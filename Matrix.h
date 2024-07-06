@@ -29,21 +29,33 @@ public:
   Matrix(std::size_t rows, std::size_t cols, InitState state = InitState::RANDOM);
 
   // Copy-Constructor for Matrix<T>.
-  Matrix(Matrix<T>& matrix);
+  Matrix(const Matrix<T>& matrix);
 
-  // Copy-Constructor for 2D vector (std::vector<std::vector<T>>).
-  Matrix(std::vector<std::vector<T>>& matrix);
-  
+  // Copy-Constructor for std::vector<std::vector<T>> (2D-Vector).
+  Matrix(const std::vector<std::vector<T>>& matrix);
+
+  // Destructor. 
   ~Matrix();
 
-  // Operators:
-  // Matrix access (for testing purpose only).
-  T* operator[](std::size_t row);
-  const T* operator[](std::size_t col) const;
+  // Copy-Assignment operator.
+  void operator=(const Matrix<T>& other);
+  
+  // Copy-Assignment operator for std::vector<std::vector<T>> (2D-Vector).
+  void operator=(const std::vector<std::vector<T>> other);
 
-  // Matrix operations.
-  // Operator for operation: Addition
-  void operator+(const Matrix<T>& other) const;
+  // Matrix access (for testing purpose only).
+  T* operator[](const std::size_t row);
+  const T* operator[](const std::size_t col) const;
+
+  // ____________________________________________________________________________
+  // Linear Algebra
+ 
+  // Performs matrix addition.
+  void add(const Matrix<T>& other) const;
+
+  // Performs matrix multiplication. 
+  void dot(const Matrix<T>& other) const;
+ 
 
   // Returns number of rows.
   std::size_t getRows() const;
