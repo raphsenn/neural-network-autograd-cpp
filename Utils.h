@@ -53,7 +53,7 @@ struct random_value<float> {
   }
 };
 
-// Create a random float number between 0 and 1.
+// Create a random double number between 0 and 1.
 template <>
 struct random_value<double> {
   static float value() {
