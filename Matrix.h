@@ -43,19 +43,19 @@ public:
   Matrix(const std::vector<std::vector<T>>& matrix);
 
   // Move-Constructor for Matrix<T>.
-  Matrix(const Matrix<T>&& matrix);
+  Matrix(Matrix<T>&& matrix);
 
   // Destructor. 
   ~Matrix();
 
   // Copy-Assignment operator.
-  void operator=(const Matrix<T>& other);
+  Matrix<T> &operator=(const Matrix<T>& other);
   
   // Copy-Assignment operator for std::vector<std::vector<T>> (2D-Vector).
-  void operator=(const std::vector<std::vector<T>> other);
+  Matrix<T> &operator=(const std::vector<std::vector<T>> other);
 
-  // Move-Assignment operator.
-  void operator=(const Matrix<T>&& other);
+  // Move-Assignment operator for Matrix<T>.
+  Matrix<T> &operator=(Matrix<T>&& other);
 
   // Matrix access (for testing purpose only).
   T* operator[](const std::size_t row);
