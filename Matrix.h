@@ -28,8 +28,14 @@ public:
   Matrix(std::size_t rows, std::size_t cols, InitState state = InitState::RANDOM);
   ~Matrix();
 
-  std::size_t getRows();
-  std::size_t getCols();
+  // Matrix access.
+  T* operator[](std::size_t row);
+  const T* operator[](std::size_t col) const;
+
+  // Returns number of rows.
+  std::size_t getRows() const;
+  // Returns number of cols.
+  std::size_t getCols() const;
   
   // Prints matrix (like a numpy matrix) in human readable format.
   void print();
