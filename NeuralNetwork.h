@@ -23,7 +23,7 @@ private:
   std::vector<Matrix<T>> biases_; 
 
   // Activation functions.
-  std::vector<Matrix<T>> activationsFunctions_;
+  std::vector<Matrix<T>> activationFunctions_;
 
   // Activation function derivatives.
   std::vector<Matrix<T>> activationFunctionDerivatives_;

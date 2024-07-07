@@ -71,12 +71,18 @@ public:
   T* operator[](const std::size_t row);
   const T* operator[](const std::size_t col) const;
 
+  // Check if two matrices are the same.
+  bool operator==(const Matrix<T> other) const;
+
   // ____________________________________________________________________________
   // Linear Algebra methods:
   // ____________________________________________________________________________
  
   // Performs matrix addition.
   void add(const Matrix<T>& other);
+
+  // Performs matrix subtraction.
+  void sub(const Matrix<T>& other);
 
   // Performs matrix multiplication. 
   // m x n * n x k = m x k
@@ -86,7 +92,11 @@ public:
   // m x n -> n x m
   void transpose();
 
-  // Sums all entry to one scalar. 
+  // matrix[i][j] = matrix[i][j]) if matrix[i][j] >= inf
+  // else inf, for all i, j.
+  void maximum(T inf);
+
+   // Sums all entry to one scalar. 
   T sum() const;
   
   // ____________________________________________________________________________

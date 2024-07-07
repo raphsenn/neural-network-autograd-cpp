@@ -105,6 +105,33 @@ TEST(CopyAssignmentVector, Matrix) {
 }
 
 // ____________________________________________________________________________
+TEST (EqualityINT, Matrix) {
+  Matrix<int> A = std::vector<std::vector<int>>({{1, 2}, {3, 4}});
+  Matrix<int> B = std::vector<std::vector<int>>({{1, 2}, {3, 4}});
+  EXPECT_EQ(A, B);
+}
+
+// ____________________________________________________________________________
+TEST (EqualityFLOAT, Matrix) {
+  Matrix<float> A = std::vector<std::vector<float>>({{0.1f, 0.2f}, {3.3f, 4.4f}});
+  Matrix<float> B = std::vector<std::vector<float>>({{0.1f, 0.2f}, {3.3f, 4.4f}});
+  EXPECT_EQ(A, B);
+
+  Matrix<float> C = std::vector<std::vector<float>>({{0.1f, 0.2f}, {3.2f, 4.4f}});
+  EXPECT_FALSE(A == C);
+}
+
+// ____________________________________________________________________________
+TEST (EqualityDOUBLE, Matrix) {
+  Matrix<double> A = std::vector<std::vector<double>>({{0.1, 0.2}, {3.3, 4.4}});
+  Matrix<double> B = std::vector<std::vector<double>>({{0.1, 0.2}, {3.3, 4.4}});
+  EXPECT_EQ(A, B);
+
+  Matrix<double> C = std::vector<std::vector<double>>({{0.1, 0.2}, {3.2, 4.4}});
+  EXPECT_FALSE(A == C);
+}
+
+// ____________________________________________________________________________
 // Linear Algebra Operations:
 // ____________________________________________________________________________ 
 
@@ -230,6 +257,13 @@ TEST(Transpose, Matrix) {
   ASSERT_EQ(C[4][0], 5);
   ASSERT_EQ(C[5][0], 6);
   ASSERT_EQ(C[6][0], 7);
+}
+
+// ____________________________________________________________________________
+TEST(Maximum, Matrix) {
+  Matrix<int> A = std::vector<std::vector<int>>({{-3, 2, -1}, {1, 11, -2}});
+  A.maximum(0); 
+  EXPECT_EQ(A, Matrix<int>(std::vector<std::vector<int>>({{0, 2, 0}, {1, 11, 0}})));
 }
 
 // ____________________________________________________________________________
