@@ -2,17 +2,47 @@
 #include "./Matrix.h"
 #include "./Activation.h"
 
-template <typename S=float>
+// Simple feed forward neural network.
+template <typename T>
 class NeuralNetwork {
 
 private:
+  // Learning rate. 
+  float learningRate_;
+
+  // Layer sizes.
+  std::vector<size_t> layerSizes_;
+
+  // Number of layers.
+  int numLayers_;
+
+  // Weights.
+  std::vector<Matrix<T>> weights_; 
+  
+  // Biases.
+  std::vector<Matrix<T>> biases_; 
+
+  // Activation functions.
+  std::vector<Matrix<T>> activationsFunctions_;
+
+  // Activation function derivatives.
+  std::vector<Matrix<T>> activationFunctionDerivatives_;
+
+  // Forward propagation. 
   void forward();
+
+  // Backpropagation.
   void backward();
 
 public:
+  // Constructor.
   NeuralNetwork(std::vector<int> layers, std::vector<std::string> activations_functions, float learning_rate=0.1f, InitState state = InitState::RANDOM);
 
-  void train();
+  // Trains the neural net.
+  void train(Matrix<T> X, Matrix<T> y, size_t batchSize, float learningRate);
+  void train(std::vector<std::vector<T>> X, std::vector<std::vector<T>> y, size_t batchSize, float learningRate);
 
+  // Evaluates neural net.
+  void evaluate(Matrix<T> X, Matrix<T> y);
+  void evaluate(std::vector<std::vector<T>> X, std::vector<std::vector<T>> y);
 };
-

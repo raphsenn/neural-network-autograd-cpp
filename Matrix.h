@@ -9,6 +9,7 @@
 enum class InitState {
   ZERO,
   RANDOM,
+  ONES,
   EMPTY
 };
 
@@ -26,8 +27,12 @@ private:
 
   // Fills the matrix with zeros.
   void fillZeros();
+  
   // Fills the matrix with random <T> values.
   void fillRandom();
+  
+  // Fills the matrix with ones.
+  void fillOnes();
 
 public:
   // ____________________________________________________________________________

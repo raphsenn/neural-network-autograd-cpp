@@ -3,60 +3,31 @@
 #include <type_traits>
 
 // ____________________________________________________________________________
-// Zero elements for diffrent types (int, float, double).
-// ____________________________________________________________________________
-
-// ____________________________________________________________________________
 template <typename T>
-struct zero_value {};
+struct value {};
 
 // ____________________________________________________________________________
-// Zero value for int.
+// INT:
 template <>
-struct zero_value<int> {
-  static int value() { return 0; }
-};
-
-// ____________________________________________________________________________
-// Zero value for float.
-template <>
-struct zero_value<float> {
-  static int value() { return 0.0f; }
-};
-
-// ____________________________________________________________________________
-// Zero value for double.
-template <>
-struct zero_value<double> {
-  static int value() { return 0.0; }
-};
-
-
-// ____________________________________________________________________________
-// Random elements for diffrent types (int, float, double).
-// ____________________________________________________________________________
-
-// ____________________________________________________________________________
-template <typename T>
-struct random_value {};
-
-// ____________________________________________________________________________
-// Create a random integer number.
-template <>
-struct random_value<int> {
-  static int value() {
+struct value<int> {
+  static int zero() { return 0; }
+  static int one() { return 1; }
+  static int random() {
     static std::random_device rd;
     static std::mt19937 gen(rd());
     static std::uniform_int_distribution<int> distribution(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
     return distribution(gen);
   }
+
 };
 
 // ____________________________________________________________________________
-// Create a random float number between 0 and 1.
+// FLOAT:
 template <>
-struct random_value<float> {
-  static float value() {
+struct value<float> {
+  static float zero() { return 0.0f; }
+  static float one() { return 1.0f; }
+  static float random() {
     static std::random_device rd;
     static std::mt19937 gen(rd());
     static std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
@@ -65,13 +36,16 @@ struct random_value<float> {
 };
 
 // ____________________________________________________________________________
-// Create a random double number between 0 and 1.
+// DOUBLE:
 template <>
-struct random_value<double> {
-  static float value() {
+struct value<double> {
+  static double zero() { return 0.0; }
+  static double one() { return 0.0; }
+  static double random() {
     static std::random_device rd;
     static std::mt19937 gen(rd());
     static std::uniform_real_distribution<double> distribution(0.0, 1.0);
     return distribution(gen);
   }
+
 };

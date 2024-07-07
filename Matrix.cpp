@@ -15,15 +15,18 @@
 template <typename T>
 Matrix<T>::Matrix(std::size_t rows, std::size_t cols, InitState state) : rows_(rows), cols_(cols) {
   if (rows_ <= 0 || cols_ <= 0) { throw std::invalid_argument("Rows or cols must be > 0");}
+  
   // Allocate memory.
   matrix_ = new T*[rows_];
   for (std::size_t row = 0; row < rows_; ++row) {
     matrix_[row] = new T[cols_];
   }
+  
   // Handle InitState for matrix entrys.
   switch (state) {
     case InitState::ZERO: fillZeros(); break;
     case InitState::RANDOM: fillRandom(); break;
+    case InitState::ONES: fillOnes(); break;
     case InitState::EMPTY: break;
   }
 }
@@ -245,7 +248,7 @@ template <typename T>
 void Matrix<T>::fillZeros() {
   for (size_t row = 0; row < rows_; ++row) {
     for (size_t col = 0; col < cols_; ++col) {
-      matrix_[row][col] = zero_value<T>::value();
+      matrix_[row][col] = value<T>::zero();
     }
   }
 }
@@ -255,7 +258,17 @@ template <typename T>
 void Matrix<T>::fillRandom() {
   for (size_t row = 0; row < rows_; ++row) {
     for (size_t col = 0; col < cols_; ++col) {
-      matrix_[row][col] = random_value<T>::value();
+      matrix_[row][col] = value<T>::random();
+    }
+  }
+}
+
+// ____________________________________________________________________________
+template <typename T>
+void Matrix<T>::fillOnes() {
+  for (size_t row = 0; row < rows_; ++row) {
+    for (size_t col = 0; col < cols_; ++col) {
+      matrix_[row][col] = value<T>::one();
     }
   }
 }

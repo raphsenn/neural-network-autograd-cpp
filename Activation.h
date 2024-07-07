@@ -3,6 +3,16 @@
 
 #include "./Matrix.h"
 
+enum class Activation {
+  linear,
+  relu,
+  step,
+  softmax,
+  maxout,
+  sigmoid,
+  tanh
+};
+
 // ____________________________________________________________________________
 // LINEAR
 template <typename T>
