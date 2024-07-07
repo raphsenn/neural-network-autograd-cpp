@@ -2,12 +2,13 @@
 #include <cstdlib>
 #include <cstddef>
 #include <stdexcept>
+#include <utility>
 
 #include "./Matrix.h"
 #include "./Utils.h"
 
 // ____________________________________________________________________________
-// Constructor and Copy-Assignment-Operators:
+// Constructors:
 // ____________________________________________________________________________
 
 // ____________________________________________________________________________
@@ -23,6 +24,7 @@ Matrix<T>::Matrix(std::size_t rows, std::size_t cols, InitState state) : rows_(r
   switch (state) {
     case InitState::ZERO: fillZeros(); break;
     case InitState::RANDOM: fillRandom(); break;
+    case InitState::EMPTY: break;
   }
 }
 
@@ -85,6 +87,10 @@ Matrix<T>::~Matrix() {
   }
   delete[] matrix_;
 }
+
+// ____________________________________________________________________________
+// Operators:
+// ____________________________________________________________________________
 
 // ____________________________________________________________________________
 template <typename T>
@@ -163,12 +169,17 @@ const T* Matrix<T>::operator[](const std::size_t col) const {
 };
 
 // ____________________________________________________________________________
-// Linear Algebra methods.
+// Linear Algebra operations:
 // ____________________________________________________________________________
 
 // ____________________________________________________________________________
 template <typename T>
-void Matrix<T>::add(const Matrix<T>& other) const {
+void Matrix<T>::add(const Matrix<T>& other) {
+  // Check if matrices are in the same vectorspace.
+  if (rows_ != other.rows_ || cols_ != other.cols_) { 
+    throw std::invalid_argument("Matrices dimensions do not match for addition.");
+  }
+  // Perform matrix addition.
   for (size_t row = 0; row < rows_; ++row) {
     for (size_t col = 0; col < cols_; ++col) {
       matrix_[row][col] = matrix_[row][col] + other.matrix_[row][col];
@@ -178,12 +189,47 @@ void Matrix<T>::add(const Matrix<T>& other) const {
 
 // ____________________________________________________________________________
 template <typename T>
-void Matrix<T>::dot(const Matrix<T>& other) const {
-  for (size_t row = 0; row < rows_; ++row) {
-    for (size_t col = 0; col < cols_; ++col) {
-      matrix_[row][col] = matrix_[row][col] + other.matrix_[row][col];
+void Matrix<T>::dot(const Matrix<T>& other) {
+  // Check if matrices are in the same vectorspace.
+  if (cols_ != other.rows_) { 
+    throw std::invalid_argument("Matrices dimensions do not match for multiplication.");
+  }
+  
+  // Perform matrix multiplication.
+  // Really expensive, maybie work on this later.
+  Matrix<T> C(rows_, other.cols_, InitState::ZERO); 
+  for (size_t i = 0; i < rows_; ++i) {
+    for (size_t k = 0; k < other.cols_; ++k) { 
+      for (size_t j = 0; j < cols_; ++j) {
+        C[i][k] += matrix_[i][j] * other.matrix_[j][k];
+      }
     }
   }
+  *this = std::move(C);
+}
+
+// ____________________________________________________________________________
+template <typename T>
+void Matrix<T>::transpose() {
+  Matrix<T> transposed(cols_, rows_, InitState::EMPTY);
+  for (size_t row = 0; row < rows_; ++row) {
+    for (size_t col = 0; col < cols_; ++col) {
+      transposed[col][row] = matrix_[row][col]; 
+    }
+  }
+  *this = std::move(transposed);
+}
+
+// ____________________________________________________________________________
+template <typename T>
+T Matrix<T>::sum() const {
+  T sum = zero_value<T>::value();
+  for (size_t row = 0; row < rows_; ++row) {
+    for (size_t col = 0; col < cols_; ++col) {
+      sum = sum + matrix_[row][col];
+    }
+  }
+  return sum;
 }
 
 // ____________________________________________________________________________

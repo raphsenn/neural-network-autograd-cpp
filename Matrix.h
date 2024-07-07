@@ -5,17 +5,18 @@
 #include <cstddef>
 #include <iostream>
 
-// Matrix states.
+// Different matrix states.
 enum class InitState {
   ZERO,
-  RANDOM
+  RANDOM,
+  EMPTY
 };
 
 // A simple matrix.
 template <typename T> class Matrix {
 private:
   // ____________________________________________________________________________
-  // Membervariables and Methods (private).
+  // Membervariables and Methods (private):
   // ____________________________________________________________________________
   
   // Rows, cols and matrix elements.
@@ -30,7 +31,7 @@ private:
 
 public:
   // ____________________________________________________________________________
-  // Constructors and Operators.
+  // Constructors:
   // ____________________________________________________________________________
   
   // Constructor.
@@ -47,7 +48,11 @@ public:
 
   // Destructor. 
   ~Matrix();
-
+  
+  // ____________________________________________________________________________
+  // Operators:
+  // ____________________________________________________________________________
+ 
   // Copy-Assignment operator.
   Matrix<T> &operator=(const Matrix<T>& other);
   
@@ -62,23 +67,25 @@ public:
   const T* operator[](const std::size_t col) const;
 
   // ____________________________________________________________________________
-  // Linear Algebra methods.
+  // Linear Algebra methods:
   // ____________________________________________________________________________
  
   // Performs matrix addition.
-  void add(const Matrix<T>& other) const;
+  void add(const Matrix<T>& other);
 
   // Performs matrix multiplication. 
-  void dot(const Matrix<T>& other) const;
+  // m x n * n x k = m x k
+  void dot(const Matrix<T>& other);
   
-  // Transposes the matrix.
-  void transpose() const;
+  // Transpose the matrix.
+  // m x n -> n x m
+  void transpose();
 
   // Sums all entry to one scalar. 
   T sum() const;
   
   // ____________________________________________________________________________
-  // Methods (public).
+  // More methods (public):
   // ____________________________________________________________________________
  
   // Returns number of rows.

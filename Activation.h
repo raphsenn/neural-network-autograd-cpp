@@ -8,7 +8,6 @@
 template <typename T>
 Matrix<T> linear(Matrix<T>& X);
 
-// linear_derivative(X) = 1
 template <typename T>
 Matrix<T> linear_derivative(Matrix<T>& X);
 

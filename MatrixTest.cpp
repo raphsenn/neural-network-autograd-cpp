@@ -6,7 +6,7 @@
 
 
 // ____________________________________________________________________________
-// Constructor and Copy-Assignment:
+// Constructors:
 // ____________________________________________________________________________
 
 // ____________________________________________________________________________
@@ -72,6 +72,9 @@ TEST(CopyConstructorVector, Matrix) {
   ASSERT_FLOAT_EQ(B[2][1], 0.8f);
   ASSERT_FLOAT_EQ(B[2][2], 0.9f);
 }
+// ____________________________________________________________________________
+// Operators:
+// ____________________________________________________________________________
 
 // ____________________________________________________________________________
 TEST(CopyAssignmentVector, Matrix) {
@@ -101,28 +104,11 @@ TEST(CopyAssignmentVector, Matrix) {
 }
 
 // ____________________________________________________________________________
-TEST(Print, Matrix) {
-  Matrix<float> A(1, 1, InitState::ZERO);
-  Matrix<float> B(3, 3, InitState::ZERO);
-  
-  // Test printing. 
-  testing::internal::CaptureStdout();
-  A.print();
-  std::string A_as_string = testing::internal::GetCapturedStdout();
-  EXPECT_EQ(A_as_string, "matrix([[0]])\n");
-
-  testing::internal::CaptureStdout();
-  B.print();
-  std::string B_as_string = testing::internal::GetCapturedStdout();
-  EXPECT_EQ(B_as_string, "matrix([[0, 0, 0],\n[0, 0, 0],\n[0, 0, 0]])\n");
-}
-
-// ____________________________________________________________________________
 // Linear Algebra Operations:
 // ____________________________________________________________________________ 
 
 // ____________________________________________________________________________
-TEST(Addition, Matrix) {
+TEST(AdditionINT, Matrix) {
   std::vector<std::vector<int>> vec1 = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
   Matrix<int> A = vec1;
   Matrix<int> B = vec1;
@@ -148,5 +134,121 @@ TEST(Addition, Matrix) {
   ASSERT_EQ(C[0][1], 0);
 }
 
+// ____________________________________________________________________________
+TEST(AdditionFLOAT, Matrix) {
+  Matrix<float> A = std::vector<std::vector<float>>({{0.1f}});
+  A.add(A);  
+  ASSERT_FLOAT_EQ(A[0][0], 0.2f);
 
+  Matrix<float> B = std::vector<std::vector<float>>({{0.11f, 0.22f, 0.33f}, {-1.1f, -2.2f, -3.3f}});
+  Matrix<float> C = std::vector<std::vector<float>>({{-0.01f, -0.02f, -0.03f}, {1.0f, 2.0f, 3.0f}});
+  B.add(C);
+  ASSERT_FLOAT_EQ(B[0][0], 0.1f);
+  ASSERT_FLOAT_EQ(B[0][1], 0.2f);
+  ASSERT_FLOAT_EQ(B[0][2], 0.3f);
+  ASSERT_FLOAT_EQ(B[1][0], -0.1f);
+  ASSERT_FLOAT_EQ(B[1][1], -0.2f);
+  ASSERT_FLOAT_EQ(B[1][2], -0.3f);
+}
+
+
+// ____________________________________________________________________________
+TEST(AdditionThrow, Matrix) {
+  std::vector<std::vector<int>> vec1 = {{1, 2}, {3, 4}};
+  std::vector<std::vector<int>> vec2 = {{1, 2, 3}, {4, 5, 6}};
+  Matrix<int> A = vec1;
+  Matrix<int> B = vec2;
+  EXPECT_THROW(A.add(B), std::invalid_argument);
+
+  std::vector<std::vector<int>> vec3 = {{1}};
+  std::vector<std::vector<int>> vec4 = {{1, 2}};
+  EXPECT_THROW(Matrix<int>(vec3).add(Matrix<int>(vec4)), std::invalid_argument);
+}
+
+// ____________________________________________________________________________
+TEST(Multiplication, Matrix) {
+  Matrix<int> A = std::vector<std::vector<int>>({{3, 2, 1}, {1, 0, 2}});
+  Matrix<int> B = std::vector<std::vector<int>>({{1, 2}, {0, 1}, {4, 0}});
+  A.dot(B);
+  ASSERT_EQ(A.getRows(), size_t(2));
+  ASSERT_EQ(A.getCols(), size_t(2));
+  ASSERT_EQ(A[0][0], 7);
+  ASSERT_EQ(A[0][1], 8);
+  ASSERT_EQ(A[1][0], 9);
+  ASSERT_EQ(A[1][1], 2);
+
+  // Dot product (Euclidean space).
+  Matrix<int> C = std::vector<std::vector<int>>({{1, 2, 3, 4, 5}});
+  Matrix<int> D = std::vector<std::vector<int>>({{1}, {2}, {3}, {4}, {5}});
+  C.dot(D);
+  ASSERT_EQ(C.getRows(), size_t(1));
+  ASSERT_EQ(C.getCols(), size_t(1));
+  ASSERT_EQ(C[0][0], 55);
+}
+
+// ____________________________________________________________________________
+TEST(MultiplicationThrow, Matrix) {
+  Matrix<int> A = std::vector<std::vector<int>>({{3, 2, 1}, {1, 0, 2}});
+  Matrix<int> B = std::vector<std::vector<int>>({{1, 2}, {0, 1}});
+  EXPECT_THROW(A.dot(B), std::invalid_argument);
+}
+
+// ____________________________________________________________________________
+TEST(Transpose, Matrix) {
+  Matrix<int> A = std::vector<std::vector<int>>({{3, 2, 1}, {1, 0, 2}});
+  ASSERT_EQ(A.getRows(), size_t(2));
+  ASSERT_EQ(A.getCols(), size_t(3));
+  A.transpose();
+  ASSERT_EQ(A.getRows(), size_t(3));
+  ASSERT_EQ(A.getCols(), size_t(2));
+  ASSERT_EQ(A[0][0], 3);
+  ASSERT_EQ(A[0][1], 1);
+  ASSERT_EQ(A[1][0], 2);
+  ASSERT_EQ(A[1][1], 0);
+  ASSERT_EQ(A[2][0], 1);
+  ASSERT_EQ(A[2][1], 2);
+
+  Matrix<int> B = std::vector<std::vector<int>>({{1}});
+  ASSERT_EQ(B.getRows(), size_t(1));
+  ASSERT_EQ(B.getCols(), size_t(1));
+  B.transpose();
+  ASSERT_EQ(B.getRows(), size_t(1));
+  ASSERT_EQ(B.getCols(), size_t(1));
+  ASSERT_EQ(B[0][0], 1);
+
+  Matrix<int> C = std::vector<std::vector<int>>({{1, 2, 3, 4, 5, 6, 7}});
+  ASSERT_EQ(C.getRows(), size_t(1));
+  ASSERT_EQ(C.getCols(), size_t(7));
+  C.transpose();
+  ASSERT_EQ(C.getRows(), size_t(7));
+  ASSERT_EQ(C.getCols(), size_t(1));
+  ASSERT_EQ(C[0][0], 1);
+  ASSERT_EQ(C[1][0], 2);
+  ASSERT_EQ(C[2][0], 3);
+  ASSERT_EQ(C[3][0], 4);
+  ASSERT_EQ(C[4][0], 5);
+  ASSERT_EQ(C[5][0], 6);
+  ASSERT_EQ(C[6][0], 7);
+}
+
+// ____________________________________________________________________________
+// More methods:
+// ____________________________________________________________________________
+
+// ____________________________________________________________________________
+TEST(Print, Matrix) {
+  Matrix<int> A = std::vector<std::vector<int>>({{1}});
+  Matrix<int> B = std::vector<std::vector<int>>({{1, 2, 3}, {4, 5, 6}, {7, 8, 9}});
+  
+  // Test printing. 
+  testing::internal::CaptureStdout();
+  A.print();
+  std::string A_as_string = testing::internal::GetCapturedStdout();
+  EXPECT_EQ(A_as_string, "matrix([[1]])\n");
+
+  testing::internal::CaptureStdout();
+  B.print();
+  std::string B_as_string = testing::internal::GetCapturedStdout();
+  EXPECT_EQ(B_as_string, "matrix([[1, 2, 3],\n[4, 5, 6],\n[7, 8, 9]])\n");
+}
 

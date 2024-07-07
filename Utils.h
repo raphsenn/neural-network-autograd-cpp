@@ -2,23 +2,29 @@
 #include <random>
 #include <type_traits>
 
+// ____________________________________________________________________________
 // Zero elements for diffrent types (int, float, double).
+// ____________________________________________________________________________
 
+// ____________________________________________________________________________
 template <typename T>
 struct zero_value {};
 
+// ____________________________________________________________________________
 // Zero value for int.
 template <>
 struct zero_value<int> {
   static int value() { return 0; }
 };
 
+// ____________________________________________________________________________
 // Zero value for float.
 template <>
 struct zero_value<float> {
   static int value() { return 0.0f; }
 };
 
+// ____________________________________________________________________________
 // Zero value for double.
 template <>
 struct zero_value<double> {
@@ -26,11 +32,15 @@ struct zero_value<double> {
 };
 
 
+// ____________________________________________________________________________
 // Random elements for diffrent types (int, float, double).
+// ____________________________________________________________________________
 
+// ____________________________________________________________________________
 template <typename T>
 struct random_value {};
 
+// ____________________________________________________________________________
 // Create a random integer number.
 template <>
 struct random_value<int> {
@@ -42,6 +52,7 @@ struct random_value<int> {
   }
 };
 
+// ____________________________________________________________________________
 // Create a random float number between 0 and 1.
 template <>
 struct random_value<float> {
@@ -53,6 +64,7 @@ struct random_value<float> {
   }
 };
 
+// ____________________________________________________________________________
 // Create a random double number between 0 and 1.
 template <>
 struct random_value<double> {
