@@ -1,4 +1,6 @@
 
+#pragma once
+
 #include "./Matrix.h"
 #include "./Activation.h"
 
@@ -36,7 +38,7 @@ private:
 
 public:
   // Constructor.
-  NeuralNetwork(std::vector<int> layers, std::vector<std::string> activations_functions, float learning_rate=0.1f, InitState state = InitState::RANDOM);
+  NeuralNetwork(std::vector<size_t> layers, std::vector<Activation> activation_functions, float learning_rate=0.1f, InitState state = InitState::RANDOM);
 
   // Trains the neural net.
   void train(Matrix<T> X, Matrix<T> y, size_t batchSize, float learningRate);
