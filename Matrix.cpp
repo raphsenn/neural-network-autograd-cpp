@@ -193,6 +193,19 @@ Matrix<T> Matrix<T>::transpose() {
   return *this;
 }
 
+
+// ____________________________________________________________________________
+template <typename T>
+Matrix<T> Matrix<T>::scalMul(T scalar) {
+ for (size_t row = 0; row < rows_; ++row) {
+    for (size_t col = 0; col < cols_; ++col) {
+      matrix_[row][col] *= scalar;
+    }
+  }
+  return *this; 
+}
+
+
 // ____________________________________________________________________________
 template <typename T>
 void Matrix<T>::maximum(T inf) {

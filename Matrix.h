@@ -98,6 +98,9 @@ public:
   // m x n -> n x m
   Matrix<T> transpose();
 
+  // Scalar multiplication.
+  Matrix<T> scalMul(T scalar);
+  
   // matrix[i][j] = matrix[i][j]) if matrix[i][j] >= inf
   // else inf, for all i, j.
   void maximum(T inf);

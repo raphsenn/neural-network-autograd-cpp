@@ -37,28 +37,28 @@ Matrix<T> NeuralNetwork<S, T>::forward(Matrix<T> X) {
   A_ = {X};
   Z_.clear();
 
-  // Forward pass.
+  // Forward propagation.
   for (size_t i = 0; i < numLayers_ - 1; ++i) {
-    // A_.back().print();
-    // weights_[i].print();
-    // biases_[i].print();
+    
+    // Calculates: matmul(A[i], W[i]) + BIAS
     Matrix<T> z = A_.back().dot(weights_[i]).add(biases_[i]);
     Z_.push_back(z);
-    A_.push_back(activationFunctions_[i](z));
+    
+    // Calculates: activate(matmul(A[i], W[i]) + BIAS)
+    activationFunctions_[i](z); 
+    A_.push_back(z);
   }
+  // Last element of A_ is output.
   return A_.back();
 }
 
 template <typename S, typename T>
 void NeuralNetwork<S, T>::backward(Matrix<T> X, Matrix<T> y) {
+  // Calculate output error.
+  // Calculates: output - labels = error 
   Matrix<T> output_error = A_.back().sub(y);
-  // std::cout << "\n"; 
-  
-  // output_error.print();
-  // activationFunctionDerivatives_.back()(A_.back()).print();
   
   Matrix<T> delta = output_error.dotElementWise(activationFunctionDerivatives_.back()(A_.back()));
-  // std::cout << "this one worked" << std::endl; 
 
   std::vector<Matrix<T>> deltas = {delta};
 
@@ -66,12 +66,11 @@ void NeuralNetwork<S, T>::backward(Matrix<T> X, Matrix<T> y) {
     delta = deltas.back().dot(weights_[i].transpose()).dotElementWise(activationFunctionDerivatives_[i](A_[i]));
     deltas.push_back(delta);
   }
-  // std::cout << "this one worked too" << std::endl; 
   std::reverse(deltas.begin(), deltas.end());
 
   for (size_t i = 0; i < numLayers_ - 1; ++i) {
-    weights_[i].add(A_[i].transpose().dot(deltas[i]));
-    biases_[i].add(deltas[i].sum());
+    weights_[i].add(A_[i].transpose().dot(deltas[i])).scalMul(learningRate_);
+    biases_[i].add(deltas[i].sum()).scalMul(learningRate_);
   }
 
 
