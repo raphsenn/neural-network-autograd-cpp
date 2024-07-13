@@ -98,7 +98,18 @@ bool Matrix<T>::operator==(const Matrix<T> other) const {
 
 // ____________________________________________________________________________
 template <typename T>
-void Matrix<T>::add(const Matrix<T>& other) {
+Matrix<T> Matrix<T>::add(const Matrix<T>& other) {
+  // Scalar addition. 
+  if (other.rows_ == 1 && other.cols_ == 1) {
+  // Perform matrix addition with scalar value.
+  for (size_t row = 0; row < rows_; ++row) {
+    for (size_t col = 0; col < cols_; ++col) {
+      matrix_[row][col] = matrix_[row][col] + other.matrix_[0][0];
+    }
+  }
+  return *this;
+  }
+
   // Check if matrices are in the same vectorspace.
   if (rows_ != other.rows_ || cols_ != other.cols_) { 
     throw std::invalid_argument("Matrices dimensions do not match for addition.");
@@ -109,11 +120,12 @@ void Matrix<T>::add(const Matrix<T>& other) {
       matrix_[row][col] = matrix_[row][col] + other.matrix_[row][col];
     }
   }
+  return *this;
 }
 
 // ____________________________________________________________________________
 template <typename T>
-void Matrix<T>::sub(const Matrix<T>& other) {
+Matrix<T> Matrix<T>::sub(const Matrix<T>& other) {
   // Check if matrices are in the same vectorspace.
   if (rows_ != other.rows_ || cols_ != other.cols_) { 
     throw std::invalid_argument("Matrices dimensions do not match for subtraction.");
@@ -124,11 +136,12 @@ void Matrix<T>::sub(const Matrix<T>& other) {
       matrix_[row][col] = matrix_[row][col] - other.matrix_[row][col];
     }
   }
+  return *this;
 }
 
 // ____________________________________________________________________________
 template <typename T>
-void Matrix<T>::dot(const Matrix<T>& other) {
+Matrix<T> Matrix<T>::dot(const Matrix<T>& other) {
   // Check if matrices are in the same vectorspace.
   if (cols_ != other.rows_) { 
     throw std::invalid_argument("Matrices dimensions do not match for multiplication.");
@@ -145,11 +158,31 @@ void Matrix<T>::dot(const Matrix<T>& other) {
     }
   }
   *this = std::move(C);
+  return *this;
 }
 
 // ____________________________________________________________________________
 template <typename T>
-void Matrix<T>::transpose() {
+Matrix<T> Matrix<T>::dotElementWise(const Matrix<T>& other) {
+  // Check if matrices are in the same vectorspace.
+  if (rows_ != other.rows_ || cols_ != other.cols_) { 
+    throw std::invalid_argument("Matrices dimensions do not match for elementt wise multiplication.");
+  }
+  
+  // Perform element wise multiplication.
+  Matrix<T> C(rows_, other.cols_, InitState::ZERO); 
+  for (size_t row = 0; row < rows_; ++row) {
+    for (size_t col = 0; col < other.cols_; ++col) { 
+        C[row][col] += matrix_[row][col] * other.matrix_[row][col];
+    }
+  }
+  *this = std::move(C);
+  return *this;
+}
+
+// ____________________________________________________________________________
+template <typename T>
+Matrix<T> Matrix<T>::transpose() {
   Matrix<T> transposed(cols_, rows_, InitState::EMPTY);
   for (size_t row = 0; row < rows_; ++row) {
     for (size_t col = 0; col < cols_; ++col) {
@@ -157,6 +190,7 @@ void Matrix<T>::transpose() {
     }
   }
   *this = std::move(transposed);
+  return *this;
 }
 
 // ____________________________________________________________________________
@@ -171,11 +205,12 @@ void Matrix<T>::maximum(T inf) {
 
 // ____________________________________________________________________________
 template <typename T>
-T Matrix<T>::sum() const {
-  T sum = value<T>::zero();
+Matrix<T> Matrix<T>::sum() const {
+  Matrix<T> sum(1, 1, InitState::ZERO);
+  // T sum = value<T>::zero();
   for (size_t row = 0; row < rows_; ++row) {
     for (size_t col = 0; col < cols_; ++col) {
-      sum = sum + matrix_[row][col];
+      sum.matrix_[0][0] += matrix_[row][col];
     }
   }
   return sum;

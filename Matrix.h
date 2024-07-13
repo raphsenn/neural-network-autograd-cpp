@@ -81,25 +81,29 @@ public:
   // ____________________________________________________________________________
  
   // Performs matrix addition.
-  void add(const Matrix<T>& other);
+  Matrix<T> add(const Matrix<T>& other);
 
   // Performs matrix subtraction.
-  void sub(const Matrix<T>& other);
+  Matrix<T> sub(const Matrix<T>& other);
 
   // Performs matrix multiplication. 
   // m x n * n x k = m x k
-  void dot(const Matrix<T>& other);
+  Matrix<T> dot(const Matrix<T>& other);
+  
+  // Element wise multiplication.
+  // m x n * m x n = m x n
+  Matrix<T> dotElementWise(const Matrix<T>& other);
   
   // Transpose the matrix.
   // m x n -> n x m
-  void transpose();
+  Matrix<T> transpose();
 
   // matrix[i][j] = matrix[i][j]) if matrix[i][j] >= inf
   // else inf, for all i, j.
   void maximum(T inf);
 
    // Sums all entry to one scalar. 
-  T sum() const;
+  Matrix<T> sum() const;
   
   // ____________________________________________________________________________
   // More methods (public):
