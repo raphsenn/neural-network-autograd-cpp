@@ -2,6 +2,7 @@
 #pragma once
 
 #include <vector>
+#include <array>
 #include <cstddef>
 #include <iostream>
 
@@ -23,7 +24,8 @@ private:
   // Rows, cols and matrix elements.
   std::size_t rows_;
   std::size_t cols_;
-  T** matrix_;
+  // T** matrix_;
+  std::vector<std::vector<T>> matrix_;
 
   // Fills the matrix with zeros.
   void fillZeros();
@@ -43,33 +45,33 @@ public:
   Matrix(std::size_t rows, std::size_t cols, InitState state = InitState::RANDOM);
 
   // Copy-Constructor for Matrix<T>.
-  Matrix(const Matrix<T>& matrix);
+  Matrix(const Matrix<T>& matrix) = default;
 
   // Copy-Constructor for std::vector<std::vector<T>> (2D-Vector).
   Matrix(const std::vector<std::vector<T>>& matrix);
 
   // Move-Constructor for Matrix<T>.
-  Matrix(Matrix<T>&& matrix);
+  Matrix(Matrix<T>&& matrix) = default;
 
   // Destructor. 
-  ~Matrix();
+  ~Matrix() = default;
   
   // ____________________________________________________________________________
   // Operators:
   // ____________________________________________________________________________
  
   // Copy-Assignment operator.
-  Matrix<T> &operator=(const Matrix<T>& other);
+  Matrix<T> &operator=(const Matrix<T>& other) = default;
   
   // Copy-Assignment operator for std::vector<std::vector<T>> (2D-Vector).
   Matrix<T> &operator=(const std::vector<std::vector<T>> other);
 
   // Move-Assignment operator for Matrix<T>.
-  Matrix<T> &operator=(Matrix<T>&& other);
+  Matrix<T> &operator=(Matrix<T>&& other) = default;
 
   // Matrix access (for testing purpose only).
-  T* operator[](const std::size_t row);
-  const T* operator[](const std::size_t col) const;
+  std::vector<T>& operator[](const std::size_t row);
+  const std::vector<T>& operator[](const std::size_t col) const;
 
   // Check if two matrices are the same.
   bool operator==(const Matrix<T> other) const;

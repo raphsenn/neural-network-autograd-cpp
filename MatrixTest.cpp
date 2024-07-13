@@ -79,8 +79,7 @@ TEST(CopyConstructorVector, Matrix) {
 
 // ____________________________________________________________________________
 TEST(CopyAssignmentVector, Matrix) {
-  std::vector<std::vector<int>> vectorA = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
-  Matrix<int> A = vectorA;
+  Matrix<int> A = std::vector<std::vector<int>>({{1, 2, 3}, {4, 5, 6}, {7, 8, 9}});
   ASSERT_EQ(A[0][0], 1);
   ASSERT_EQ(A[0][1], 2);
   ASSERT_EQ(A[0][2], 3);
@@ -91,8 +90,7 @@ TEST(CopyAssignmentVector, Matrix) {
   ASSERT_EQ(A[2][1], 8);
   ASSERT_EQ(A[2][2], 9);
 
-  std::vector<std::vector<float>> vectorB = {{0.1f, 0.2f, 0.3f}, {0.4f, 0.5f, 0.6f}, {0.7f, 0.8f, 0.9f}};
-  Matrix<float> B = vectorB;
+  Matrix<float> B = std::vector<std::vector<float>>({{0.1f, 0.2f, 0.3f}, {0.4f, 0.5f, 0.6f}, {0.7f, 0.8f, 0.9f}});
   ASSERT_FLOAT_EQ(B[0][0], 0.1f);
   ASSERT_FLOAT_EQ(B[0][1], 0.2f);
   ASSERT_FLOAT_EQ(B[0][2], 0.3f);
@@ -102,6 +100,14 @@ TEST(CopyAssignmentVector, Matrix) {
   ASSERT_FLOAT_EQ(B[2][0], 0.7f);
   ASSERT_FLOAT_EQ(B[2][1], 0.8f);
   ASSERT_FLOAT_EQ(B[2][2], 0.9f);
+
+  std::vector<std::vector<double>> vector = {{0.1, 0.2}, {1.2, 2.2}};
+  Matrix<double> C = vector;
+
+  ASSERT_DOUBLE_EQ(C[0][0], 0.1);
+  ASSERT_DOUBLE_EQ(C[0][1], 0.2);
+  ASSERT_DOUBLE_EQ(C[1][0], 1.2);
+  ASSERT_DOUBLE_EQ(C[1][1], 2.2);
 }
 
 // ____________________________________________________________________________

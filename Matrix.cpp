@@ -15,13 +15,7 @@
 template <typename T>
 Matrix<T>::Matrix(std::size_t rows, std::size_t cols, InitState state) : rows_(rows), cols_(cols) {
   if (rows_ <= 0 || cols_ <= 0) { throw std::invalid_argument("Rows or cols must be > 0");}
-  
-  // Allocate memory.
-  matrix_ = new T*[rows_];
-  for (std::size_t row = 0; row < rows_; ++row) {
-    matrix_[row] = new T[cols_];
-  }
-  
+  matrix_ = std::vector(rows_, std::vector<T>(cols_));
   // Handle InitState for matrix entrys.
   switch (state) {
     case InitState::ZERO: fillZeros(); break;
@@ -33,62 +27,18 @@ Matrix<T>::Matrix(std::size_t rows, std::size_t cols, InitState state) : rows_(r
 
 // ____________________________________________________________________________
 template <typename T>
-Matrix<T>::Matrix(const Matrix<T>& matrix) {
-  rows_ = matrix.rows_; 
-  cols_ = matrix.cols_; 
-
-  // Allocate new memory.
-  matrix_ = new T*[rows_];
-  for (std::size_t row = 0; row < rows_; ++row) {
-    matrix_[row] = new T[cols_];
+Matrix<T>::Matrix(const std::vector<std::vector<T>>& other) {
+  if (rows_ != other.size() || cols_ != other[0].size()) {
+    matrix_ = std::vector<std::vector<T>>(other.size(), std::vector<T>(other[0].size()));
+    rows_ = other.size();
+    cols_ = other[0].size();
   }
-
-  // Copy elements.
-  for (size_t row = 0; row < rows_; ++row) {
-    for (size_t col = 0; col < cols_; ++col) {
-      matrix_[row][col] = matrix.matrix_[row][col];
-    }
-  }
-}
-
-// ____________________________________________________________________________
-template <typename T>
-Matrix<T>::Matrix(const std::vector<std::vector<T>>& matrix) {
-  rows_ = static_cast<size_t>( matrix.size());
-  cols_ = static_cast<size_t>( matrix[0].size());
-  
-  // Allocate memory.
-  matrix_ = new T*[rows_];
-  for (std::size_t row = 0; row < rows_; ++row) {
-    matrix_[row] = new T[cols_];
-  }
-  
   // Copy elements from 2D vector to matrix_.
   for (size_t row = 0; row < rows_; ++row) {
     for (size_t col = 0; col < cols_; ++col) {
-      matrix_[row][col] = matrix[row][col];
+      matrix_[row][col] = other[row][col];
     }
   }
-}
-
-// ____________________________________________________________________________
-template <typename T>
-Matrix<T>::Matrix(Matrix<T>&& matrix) {
-  rows_ = matrix.rows_; 
-  cols_ = matrix.cols_; 
-  matrix_ = matrix.matrix_;
-  matrix.rows_ = 0;
-  matrix.cols_ = 0;
-}
-
-// ____________________________________________________________________________
-template <typename T>
-Matrix<T>::~Matrix() {
-  // Deallocate memory. 
-  for (std::size_t row = 0; row < rows_; ++row) {
-    delete[] matrix_[row];
-  }
-  delete[] matrix_;
 }
 
 // ____________________________________________________________________________
@@ -97,39 +47,14 @@ Matrix<T>::~Matrix() {
 
 // ____________________________________________________________________________
 template <typename T>
-Matrix<T> &Matrix<T>::operator=(const Matrix& other) {
-  // Handle self assignment. 
-  if (this == &other) { return *this; }
+Matrix<T>& Matrix<T>::operator=(const std::vector<std::vector<T>> other) {
+  if (rows_ != other.size() || cols_ != other[0].size()) {
+    rows_ = static_cast<size_t> (other.size());
+    cols_ = static_cast<size_t> (other[0].size());
+    matrix_ = std::vector<std::vector<T>>(other.size(), std::vector<T>(other[0].size())); 
+  } 
   
-  // Deallocate memory. 
-  for (std::size_t row = 0; row < rows_; ++row) {
-    delete[] matrix_[row];
-  }
-  delete[] matrix_;
-
   // Perform copy.
-  rows_ = other.rows_;
-  cols_ = other.cols_;
-  for (size_t row = 0; row < rows_; ++row) {
-    for (size_t col = 0; col < cols_; ++col) {
-      matrix_[row][col] = other.matrix_[row][col];
-    }
-  }
-  return *this;
-}
-
-// ____________________________________________________________________________
-template <typename T>
-Matrix<T> &Matrix<T>::operator=(const std::vector<std::vector<T>> other) {
-  // Deallocate memory. 
-  for (std::size_t row = 0; row < rows_; ++row) {
-    delete[] matrix_[row];
-  }
-  delete[] matrix_;
-
-  // Perform copy.
-  rows_ = static_cast<size_t> (other.size());
-  cols_ = static_cast<size_t> (other[0].size());
   for (size_t row = 0; row < rows_; ++row) {
     for (size_t col = 0; col < cols_; ++col) {
       matrix_[row][col] = other[row][col];
@@ -140,24 +65,7 @@ Matrix<T> &Matrix<T>::operator=(const std::vector<std::vector<T>> other) {
 
 // ____________________________________________________________________________
 template <typename T>
-Matrix<T> &Matrix<T>::operator=(Matrix&& other) {
-  // Deallocate memory. 
-  for (std::size_t row = 0; row < rows_; ++row) {
-    delete[] matrix_[row];
-  }
-  delete[] matrix_;
-  rows_ = other.rows_;
-  cols_ = other.cols_;
-  matrix_ = other.matrix_;
-  other.rows_ = 0;
-  other.cols_ = 0;
-  other.matrix_ = nullptr;
-  return *this;
-}
-
-// ____________________________________________________________________________
-template <typename T>
-T* Matrix<T>::operator[](const std::size_t row) {
+std::vector<T>& Matrix<T>::operator[](const std::size_t row) {
   // Handle if row >= rows_. 
   if (row >= rows_) { throw std::out_of_range("Row index out of range"); }
   return matrix_[row];
@@ -165,9 +73,9 @@ T* Matrix<T>::operator[](const std::size_t row) {
 
 // ____________________________________________________________________________
 template <typename T>
-const T* Matrix<T>::operator[](const std::size_t col) const {
+const std::vector<T>& Matrix<T>::operator[](const std::size_t col) const {
   // Handle if col >= cols_. 
-  if (col >= cols_) { throw std::out_of_range("Row index out of range"); }
+  if (col >= cols_) { throw std::out_of_range("Col index out of range"); }
   return matrix_[col];
 };
 
