@@ -93,10 +93,14 @@ public:
   // Element wise multiplication.
   // m x n * m x n = m x n
   Matrix<T> dotElementWise(const Matrix<T>& other);
-  
+
+  // Element wise addition.
+  Matrix<T> addElementWise(const Matrix<T>& other);
+
+
   // Transpose the matrix.
   // m x n -> n x m
-  Matrix<T> transpose();
+  Matrix<T>& transpose();
 
   // Scalar multiplication.
   Matrix<T> scalMul(T scalar);
@@ -106,7 +110,7 @@ public:
   void maximum(T inf);
 
    // Sums all entry to one scalar. 
-  Matrix<T> sum() const;
+  Matrix<T> sum(bool axis=0) const;
   
   // ____________________________________________________________________________
   // More methods (public):
@@ -121,3 +125,19 @@ public:
   // Prints matrix (like a numpy matrix) in human readable format.
   void print();
 };
+
+// ____________________________________________________________________________
+// Functions
+// ____________________________________________________________________________
+
+template <typename T>
+Matrix<T> dot(Matrix<T>& A, Matrix<T>& B);
+
+template <typename T>
+Matrix<T> add(Matrix<T>& A, Matrix<T>& B);
+
+template <typename T>
+Matrix<T> sub(Matrix<T>& A, Matrix<T>& B);
+
+template <typename T>
+Matrix<T> dotElementWise(Matrix<T>& A, Matrix<T>& B);

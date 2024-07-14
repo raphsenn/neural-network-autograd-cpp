@@ -100,11 +100,11 @@ bool Matrix<T>::operator==(const Matrix<T> other) const {
 template <typename T>
 Matrix<T> Matrix<T>::add(const Matrix<T>& other) {
   // Scalar addition. 
-  if (other.rows_ == 1 && other.cols_ == 1) {
+  if (cols_ == other.cols_ && other.rows_ == 1) {
   // Perform matrix addition with scalar value.
   for (size_t row = 0; row < rows_; ++row) {
     for (size_t col = 0; col < cols_; ++col) {
-      matrix_[row][col] = matrix_[row][col] + other.matrix_[0][0];
+      matrix_[row][col] = matrix_[row][col] + other.matrix_[0][col];
     }
   }
   return *this;
@@ -157,6 +157,7 @@ Matrix<T> Matrix<T>::dot(const Matrix<T>& other) {
       }
     }
   }
+  cols_ = other.cols_;
   *this = std::move(C);
   return *this;
 }
@@ -165,7 +166,7 @@ Matrix<T> Matrix<T>::dot(const Matrix<T>& other) {
 template <typename T>
 Matrix<T> Matrix<T>::dotElementWise(const Matrix<T>& other) {
   // Check if matrices are in the same vectorspace.
-  if (rows_ != other.rows_ || cols_ != other.cols_) { 
+  if (rows_ != other.rows_) { 
     throw std::invalid_argument("Matrices dimensions do not match for elementt wise multiplication.");
   }
   
@@ -182,7 +183,29 @@ Matrix<T> Matrix<T>::dotElementWise(const Matrix<T>& other) {
 
 // ____________________________________________________________________________
 template <typename T>
-Matrix<T> Matrix<T>::transpose() {
+Matrix<T> Matrix<T>::addElementWise(const Matrix<T>& other) {
+  // Check if matrices are in the same vectorspace.
+  if (rows_ == other.rows_ && cols_ == other.cols_) {return add(other); }
+
+  if (other.rows_ == 1 && cols_ == other.cols_) { 
+    // Perform element wise multiplication.
+    Matrix<T> C(rows_, cols_, InitState::ZERO); 
+    for (size_t row = 0; row < rows_; ++row) {
+      for (size_t col = 0; col < other.cols_; ++col) { 
+        C[row][col] = matrix_[row][col] + other.matrix_[0][col];
+      }
+      *this = std::move(C);
+      return *this; 
+    }
+  }
+  if (other.rows_ == other.rows_ && other.cols_ == 1) { 
+  
+  }
+}
+
+// ____________________________________________________________________________
+template <typename T>
+Matrix<T>& Matrix<T>::transpose() {
   Matrix<T> transposed(cols_, rows_, InitState::EMPTY);
   for (size_t row = 0; row < rows_; ++row) {
     for (size_t col = 0; col < cols_; ++col) {
@@ -218,12 +241,20 @@ void Matrix<T>::maximum(T inf) {
 
 // ____________________________________________________________________________
 template <typename T>
-Matrix<T> Matrix<T>::sum() const {
-  Matrix<T> sum(1, 1, InitState::ZERO);
-  // T sum = value<T>::zero();
+Matrix<T> Matrix<T>::sum(bool axis) const {
+  if (!axis) {
+    Matrix<T> sum(rows_, 1, InitState::ZERO);
+    for (size_t row = 0; row < rows_; ++row) {
+      for (size_t col = 0; col < cols_; ++col) {
+        sum.matrix_[row][0] += matrix_[row][col];
+      }
+    }
+    return sum;
+  }
+  Matrix<T> sum(1, cols_, InitState::ZERO);
   for (size_t row = 0; row < rows_; ++row) {
     for (size_t col = 0; col < cols_; ++col) {
-      sum.matrix_[0][0] += matrix_[row][col];
+      sum.matrix_[0][col] += matrix_[row][col];
     }
   }
   return sum;
@@ -284,7 +315,135 @@ void Matrix<T>::print() {
 }
 
 // ____________________________________________________________________________
+template <typename T>
+Matrix<T> dot(Matrix<T>& A, Matrix<T>& B) {
+  // Check if matrices are in the same vectorspace.
+  if (A.getCols() != B.getRows()) { 
+    throw std::invalid_argument("Matrices dimensions do not match for multiplication.");
+  }
+  
+  // Perform matrix multiplication.
+  // Really expensive, maybie work on this later.
+  Matrix<T> C(A.getRows(), B.getCols(), InitState::ZERO); 
+  for (size_t i = 0; i < A.getRows(); ++i) {
+    for (size_t k = 0; k < B.getCols(); ++k) { 
+      for (size_t j = 0; j < A.getCols(); ++j) {
+        C[i][k] += A[i][j] * B[j][k];
+      }
+    }
+  }
+  return C; 
+}
+
+// ____________________________________________________________________________
+template <typename T>
+Matrix<T> add(Matrix<T>& A, Matrix<T>& B) {
+  // Scalar addition. 
+  if (A.getCols() == B.getCols() && B.getRows() == 1) {
+  // Perform matrix addition with scalar value.
+  Matrix<T> C(A.getRows(), A.getCols(), InitState::ZERO); 
+  for (size_t row = 0; row < A.getRows() ; ++row) {
+    for (size_t col = 0; col < A.getCols(); ++col) {
+      C[row][col] = A[row][col] + B[0][col];
+    }
+  }
+  return C;
+  }
+  if (A.getRows() == B.getRows() && B.getCols() == 1) {
+  // Perform matrix addition with scalar value.
+  Matrix<T> C(A.getRows(), A.getCols(), InitState::ZERO); 
+  for (size_t row = 0; row < A.getRows() ; ++row) {
+    for (size_t col = 0; col < A.getCols(); ++col) {
+      C[row][col] = A[row][col] + B[row][0];
+    }
+  }
+  return C;
+  }
+  
+  // Check if matrices are in the same vectorspace.
+  if (A.getRows() != B.getCols() || A.getCols() != B.getCols()) { 
+    throw std::invalid_argument("Matrices dimensions do not match for addition.");
+  }
+  // Perform matrix addition.
+  Matrix<T> C(A.getRows(), A.getCols(), InitState::ZERO); 
+  for (size_t row = 0; row < A.getRows(); ++row) {
+    for (size_t col = 0; col < A.getCols(); ++col) {
+      C[row][col] = A[row][col] + B[row][col];
+    }
+  }
+  return C;
+}
+
+template <typename T>
+Matrix<T> sub(Matrix<T>& A, Matrix<T>& B) {
+  // Scalar addition. 
+  if (A.getCols() == B.getCols() && B.getRows() == 1) {
+  // Perform matrix addition with scalar value.
+  Matrix<T> C(A.getRows(), A.getCols(), InitState::ZERO); 
+  for (size_t row = 0; row < A.getRows() ; ++row) {
+    for (size_t col = 0; col < A.getCols(); ++col) {
+      C[row][col] = A[row][col] - B[0][col];
+    }
+  }
+  return C;
+  }
+  if (A.getRows() == B.getRows() && B.getCols() == 1) {
+  // Perform matrix addition with scalar value.
+  Matrix<T> C(A.getRows(), A.getCols(), InitState::ZERO); 
+  for (size_t row = 0; row < A.getRows() ; ++row) {
+    for (size_t col = 0; col < A.getCols(); ++col) {
+      C[row][col] = A[row][col] - B[row][0];
+    }
+  }
+  return C;
+  }
+  
+  // Check if matrices are in the same vectorspace.
+  if (A.getRows() != B.getCols() || A.getCols() != B.getCols()) { 
+    throw std::invalid_argument("Matrices dimensions do not match for sub.");
+  }
+  // Perform matrix addition.
+  Matrix<T> C(A.getRows(), A.getCols(), InitState::ZERO); 
+  for (size_t row = 0; row < A.getRows(); ++row) {
+    for (size_t col = 0; col < A.getCols(); ++col) {
+      C[row][col] = A[row][col] - B[row][col];
+    }
+  }
+  return C;
+}
+
+// ____________________________________________________________________________
+template <typename T>
+Matrix<T> dotElementWise(Matrix<T>& A, Matrix<T>& B) {
+  // Check if matrices are in the same vectorspace.
+  if (A.getRows() != B.getRows()) { 
+    throw std::invalid_argument("Matrices dimensions do not match for element wise multiplication.");
+  }
+  
+  // Perform element wise multiplication.
+  Matrix<T> C(A.getRows(), B.getCols(), InitState::ZERO); 
+  for (size_t row = 0; row < A.getRows(); ++row) {
+    for (size_t col = 0; col < B.getCols(); ++col) { 
+        C[row][col] += A[row][col] * B[row][col];
+    }
+  }
+  return C;
+}
+
+// ____________________________________________________________________________
 // Explicit instantiations for int, float and double.
 template class Matrix<int>;
 template class Matrix<float>;
 template class Matrix<double>;
+
+template Matrix<int> dot<int>(Matrix<int>& A, Matrix<int>& B);
+template Matrix<float> dot<float>(Matrix<float>& A, Matrix<float>& B);
+
+template Matrix<int> add<int>(Matrix<int>& A, Matrix<int>& B);
+template Matrix<float> add<float>(Matrix<float>& A, Matrix<float>& B);
+
+template Matrix<int> sub<int>(Matrix<int>& A, Matrix<int>& B);
+template Matrix<float> sub<float>(Matrix<float>& A, Matrix<float>& B);
+
+template Matrix<int> dotElementWise<int>(Matrix<int>& A, Matrix<int>& B);
+template Matrix<float> dotElementWise<float>(Matrix<float>& A, Matrix<float>& B);

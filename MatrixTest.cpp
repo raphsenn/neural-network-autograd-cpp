@@ -293,3 +293,45 @@ TEST(Print, Matrix) {
   EXPECT_EQ(B_as_string, "matrix([[1, 2, 3],\n[4, 5, 6],\n[7, 8, 9]])\n");
 }
 
+// ____________________________________________________________________________
+// Linear algebra functions:
+// ____________________________________________________________________________
+
+// ____________________________________________________________________________
+TEST(dotFunction, dot) {
+  Matrix<int> A = std::vector<std::vector<int>>({{3, 2, 1}, {1, 0, 2}});
+  Matrix<int> B = std::vector<std::vector<int>>({{1, 2}, {0, 1}, {4, 0}});
+  Matrix<int> C = dot(A, B);
+  ASSERT_EQ(C.getRows(), size_t(2));
+  ASSERT_EQ(C.getCols(), size_t(2));
+  ASSERT_EQ(C[0][0], 7);
+  ASSERT_EQ(C[0][1], 8);
+  ASSERT_EQ(C[1][0], 9);
+  ASSERT_EQ(C[1][1], 2);
+
+  // Dot product (Euclidean space).
+  Matrix<int> D = std::vector<std::vector<int>>({{1, 2, 3, 4, 5}});
+  Matrix<int> E = std::vector<std::vector<int>>({{1}, {2}, {3}, {4}, {5}});
+  
+  Matrix<int> F = dot(D, E);
+  ASSERT_EQ(F.getRows(), size_t(1));
+  ASSERT_EQ(F.getCols(), size_t(1));
+  ASSERT_EQ(F[0][0], 55);
+}
+
+// ____________________________________________________________________________
+TEST(addFunctionn, add) {
+  std::vector<std::vector<int>> vec1 = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+  Matrix<int> A = vec1;
+  Matrix<int> B = vec1;
+  Matrix<int> C = add(A, B);
+  ASSERT_EQ(C[0][0], 2);
+  ASSERT_EQ(C[0][1], 4);
+  ASSERT_EQ(C[0][2], 6);
+  ASSERT_EQ(C[1][0], 8);
+  ASSERT_EQ(C[1][1], 10);
+  ASSERT_EQ(C[1][2], 12);
+  ASSERT_EQ(C[2][0], 14);
+  ASSERT_EQ(C[2][1], 16);
+  ASSERT_EQ(C[2][2], 18);
+}
