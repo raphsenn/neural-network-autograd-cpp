@@ -43,6 +43,5 @@ int main() {
     xorGate.train(X_train, y_train_xor,1, 0.1f, 10000, false);
     xorGate.act(X_train).print();
   }
-  
   return 1;
 }
