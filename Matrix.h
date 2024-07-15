@@ -70,8 +70,8 @@ public:
   Matrix<T> &operator=(Matrix<T>&& other) = default;
 
   // Matrix access (for testing purpose only).
-  std::vector<T>& operator[](const std::size_t row);
-  const std::vector<T>& operator[](const std::size_t col) const;
+  std::vector<T>& operator[](std::size_t row);
+  const std::vector<T>& operator[](std::size_t col) const;
 
   // Check if two matrices are the same.
   bool operator==(const Matrix<T> other) const;
@@ -97,10 +97,11 @@ public:
   // Element wise addition.
   Matrix<T> addElementWise(const Matrix<T>& other);
 
-
   // Transpose the matrix.
   // m x n -> n x m
   Matrix<T>& transpose();
+  
+  Matrix<T> transpose2();
 
   // Scalar multiplication.
   Matrix<T> scalMul(T scalar);
@@ -127,17 +128,25 @@ public:
 };
 
 // ____________________________________________________________________________
-// Functions
+// Linear algebra functions:
 // ____________________________________________________________________________
 
+// Matrixmultiplication.
 template <typename T>
 Matrix<T> dot(Matrix<T>& A, Matrix<T>& B);
 
+// Add to matrices.
 template <typename T>
 Matrix<T> add(Matrix<T>& A, Matrix<T>& B);
 
+// Subtract two matrices.
 template <typename T>
 Matrix<T> sub(Matrix<T>& A, Matrix<T>& B);
 
+// Dotproduct element wise:
+// Matrix<int> A = {{1, 2}, {3, 4}};
+// Matrix<int> B = {{1, 2}, {3, 4}};
+// Matrix<int> RES = dotElementWise(A, B);
+// RES = {{1 * 1, 2 * 2}, {3 * 3, 4 * 4}}
 template <typename T>
 Matrix<T> dotElementWise(Matrix<T>& A, Matrix<T>& B);

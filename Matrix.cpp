@@ -65,7 +65,7 @@ Matrix<T>& Matrix<T>::operator=(const std::vector<std::vector<T>> other) {
 
 // ____________________________________________________________________________
 template <typename T>
-std::vector<T>& Matrix<T>::operator[](const std::size_t row) {
+std::vector<T>& Matrix<T>::operator[](std::size_t row) {
   // Handle if row >= rows_. 
   if (row >= rows_) { throw std::out_of_range("Row index out of range"); }
   return matrix_[row];
@@ -73,7 +73,7 @@ std::vector<T>& Matrix<T>::operator[](const std::size_t row) {
 
 // ____________________________________________________________________________
 template <typename T>
-const std::vector<T>& Matrix<T>::operator[](const std::size_t col) const {
+const std::vector<T>& Matrix<T>::operator[](std::size_t col) const {
   // Handle if col >= cols_. 
   if (col >= cols_) { throw std::out_of_range("Col index out of range"); }
   return matrix_[col];
@@ -216,6 +216,18 @@ Matrix<T>& Matrix<T>::transpose() {
   return *this;
 }
 
+// ____________________________________________________________________________
+template <typename T>
+Matrix<T> Matrix<T>::transpose2() {
+    Matrix<T> transposed(cols_, rows_, InitState::EMPTY);
+    for (size_t row = 0; row < rows_; ++row) {
+      for (size_t col = 0; col < cols_; ++col) {
+        transposed[col][row] = matrix_[row][col]; 
+    }
+  }
+    return transposed; 
+}
+
 
 // ____________________________________________________________________________
 template <typename T>
@@ -326,10 +338,14 @@ Matrix<T> dot(Matrix<T>& A, Matrix<T>& B) {
   // Really expensive, maybie work on this later.
   Matrix<T> C(A.getRows(), B.getCols(), InitState::ZERO); 
   for (size_t i = 0; i < A.getRows(); ++i) {
-    for (size_t k = 0; k < B.getCols(); ++k) { 
-      for (size_t j = 0; j < A.getCols(); ++j) {
-        C[i][k] += A[i][j] * B[j][k];
+    for (size_t j = 0; j < B.getCols(); ++j) { 
+      T sum = value<T>::zero(); 
+      for (size_t k = 0; k < A.getCols(); ++k) {
+        // C[i][k] += A[i][j] * B[j][k];
+        sum += A[i][k] * B[k][j];
+        
       }
+      C[i][j] = sum;
     }
   }
   return C; 

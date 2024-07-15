@@ -1,6 +1,7 @@
 
 #include <random>
 #include <type_traits>
+#include <cmath>
 
 // ____________________________________________________________________________
 template <typename T>
@@ -18,6 +19,7 @@ struct value<int> {
     static std::uniform_int_distribution<int> distribution(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
     return distribution(gen);
   }
+  static int e(int x) { return std::exp(x); }
 
 };
 
@@ -33,6 +35,7 @@ struct value<float> {
     static std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
     return distribution(gen);
   }
+  static float e(float x) { return std::exp(x); }
 };
 
 // ____________________________________________________________________________
@@ -47,5 +50,6 @@ struct value<double> {
     static std::uniform_real_distribution<double> distribution(0.0, 1.0);
     return distribution(gen);
   }
+  static double e(double x) { return std::exp(x); }
 
 };
