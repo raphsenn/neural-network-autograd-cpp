@@ -16,7 +16,9 @@ Matrix<T> linear_derivative(Matrix<T>& X) { return Matrix<T>(X.getRows(), X.getC
 template <typename T>
 Matrix<T> relu(Matrix<T>& X) { 
   Matrix<T> result = X;
-  result.maximum(value<T>::zero()); return result; }
+  result.maximum(value<T>::zero());
+  return result;
+}
 
 template <typename T>
 Matrix<T> relu_derivative(Matrix<T>& X) {
