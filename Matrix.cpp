@@ -98,7 +98,7 @@ bool Matrix<T>::operator==(const Matrix<T> other) const {
 
 // ____________________________________________________________________________
 template <typename T>
-Matrix<T> Matrix<T>::add(const Matrix<T>& other) {
+Matrix<T>& Matrix<T>::add(const Matrix<T>& other) {
   // Scalar addition. 
   if (cols_ == other.cols_ && other.rows_ == 1) {
   // Perform matrix addition with scalar value.
@@ -160,47 +160,6 @@ Matrix<T> Matrix<T>::dot(const Matrix<T>& other) {
   cols_ = other.cols_;
   *this = std::move(C);
   return *this;
-}
-
-// ____________________________________________________________________________
-template <typename T>
-Matrix<T> Matrix<T>::dotElementWise(const Matrix<T>& other) {
-  // Check if matrices are in the same vectorspace.
-  if (rows_ != other.rows_) { 
-    throw std::invalid_argument("Matrices dimensions do not match for elementt wise multiplication.");
-  }
-  
-  // Perform element wise multiplication.
-  Matrix<T> C(rows_, other.cols_, InitState::ZERO); 
-  for (size_t row = 0; row < rows_; ++row) {
-    for (size_t col = 0; col < other.cols_; ++col) { 
-        C[row][col] += matrix_[row][col] * other.matrix_[row][col];
-    }
-  }
-  *this = std::move(C);
-  return *this;
-}
-
-// ____________________________________________________________________________
-template <typename T>
-Matrix<T> Matrix<T>::addElementWise(const Matrix<T>& other) {
-  // Check if matrices are in the same vectorspace.
-  if (rows_ == other.rows_ && cols_ == other.cols_) {return add(other); }
-
-  if (other.rows_ == 1 && cols_ == other.cols_) { 
-    // Perform element wise multiplication.
-    Matrix<T> C(rows_, cols_, InitState::ZERO); 
-    for (size_t row = 0; row < rows_; ++row) {
-      for (size_t col = 0; col < other.cols_; ++col) { 
-        C[row][col] = matrix_[row][col] + other.matrix_[0][col];
-      }
-      *this = std::move(C);
-      return *this; 
-    }
-  }
-  if (other.rows_ == other.rows_ && other.cols_ == 1) { 
-  
-  }
 }
 
 // ____________________________________________________________________________
@@ -334,8 +293,7 @@ Matrix<T> dot(Matrix<T>& A, Matrix<T>& B) {
     throw std::invalid_argument("Matrices dimensions do not match for multiplication.");
   }
   
-  // Perform matrix multiplication.
-  // Really expensive, maybie work on this later.
+  // Perform matrix multiplication (really expensive).
   Matrix<T> C(A.getRows(), B.getCols(), InitState::ZERO); 
   for (size_t i = 0; i < A.getRows(); ++i) {
     for (size_t j = 0; j < B.getCols(); ++j) { 
@@ -354,9 +312,10 @@ Matrix<T> dot(Matrix<T>& A, Matrix<T>& B) {
 // ____________________________________________________________________________
 template <typename T>
 Matrix<T> add(Matrix<T>& A, Matrix<T>& B) {
-  // Scalar addition. 
+  // Case 1: Scalar addition. 
+  // Case 1.1:
+  // [[1, 2], [3, 4]] + [[10, 10]] = [[11, 12], [13, 14]]
   if (A.getCols() == B.getCols() && B.getRows() == 1) {
-  // Perform matrix addition with scalar value.
   Matrix<T> C(A.getRows(), A.getCols(), InitState::ZERO); 
   for (size_t row = 0; row < A.getRows() ; ++row) {
     for (size_t col = 0; col < A.getCols(); ++col) {
@@ -365,8 +324,9 @@ Matrix<T> add(Matrix<T>& A, Matrix<T>& B) {
   }
   return C;
   }
+  // Case 1.2:
+  // [[1, 2], [3, 4]] + [[10], [10]] = [[11, 12], [13, 14]]
   if (A.getRows() == B.getRows() && B.getCols() == 1) {
-  // Perform matrix addition with scalar value.
   Matrix<T> C(A.getRows(), A.getCols(), InitState::ZERO); 
   for (size_t row = 0; row < A.getRows() ; ++row) {
     for (size_t col = 0; col < A.getCols(); ++col) {
@@ -375,7 +335,7 @@ Matrix<T> add(Matrix<T>& A, Matrix<T>& B) {
   }
   return C;
   }
-  
+  // Case 2: Addition of Matrix in same vectorspace. 
   // Check if matrices are in the same vectorspace.
   if (A.getRows() != B.getCols() || A.getCols() != B.getCols()) { 
     throw std::invalid_argument("Matrices dimensions do not match for addition.");
@@ -388,6 +348,14 @@ Matrix<T> add(Matrix<T>& A, Matrix<T>& B) {
     }
   }
   return C;
+}
+
+// ____________________________________________________________________________
+template <typename T>
+T Matrix<T>::getValue(const size_t row, const size_t col) const{
+  if (row >= rows_) { throw std::out_of_range("Row index out of range."); }
+  if (col >= cols_) { throw std::out_of_range("Col index out of range."); }
+  return matrix_[row][col];
 }
 
 template <typename T>

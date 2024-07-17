@@ -70,8 +70,8 @@ public:
   Matrix<T> &operator=(Matrix<T>&& other) = default;
 
   // Matrix access (for testing purpose only).
-  std::vector<T>& operator[](std::size_t row);
-  const std::vector<T>& operator[](std::size_t col) const;
+  std::vector<T> &operator[](std::size_t row);
+  const std::vector<T> &operator[](std::size_t col) const;
 
   // Check if two matrices are the same.
   bool operator==(const Matrix<T> other) const;
@@ -81,7 +81,7 @@ public:
   // ____________________________________________________________________________
  
   // Performs matrix addition.
-  Matrix<T> add(const Matrix<T>& other);
+  Matrix<T>& add(const Matrix<T>& other);
 
   // Performs matrix subtraction.
   Matrix<T> sub(const Matrix<T>& other);
@@ -90,13 +90,6 @@ public:
   // m x n * n x k = m x k
   Matrix<T> dot(const Matrix<T>& other);
   
-  // Element wise multiplication.
-  // m x n * m x n = m x n
-  Matrix<T> dotElementWise(const Matrix<T>& other);
-
-  // Element wise addition.
-  Matrix<T> addElementWise(const Matrix<T>& other);
-
   // Transpose the matrix.
   // m x n -> n x m
   Matrix<T>& transpose();
@@ -106,7 +99,7 @@ public:
   // Scalar multiplication.
   Matrix<T> scalMul(T scalar);
   
-  // matrix[i][j] = matrix[i][j]) if matrix[i][j] >= inf
+  // matrix[i][j] = matrix[i][j]) if matrix[i][j] >= inf, (inf = infimum).
   // else inf, for all i, j.
   void maximum(T inf);
 
@@ -122,7 +115,10 @@ public:
   
   // Returns number of cols.
   std::size_t getCols() const;
-  
+
+  // Returns of Value at row, col in matrix.
+  T getValue(const size_t row, const size_t col) const;
+
   // Prints matrix (like a numpy matrix) in human readable format.
   void print();
 };
@@ -131,7 +127,7 @@ public:
 // Linear algebra functions:
 // ____________________________________________________________________________
 
-// Matrixmultiplication.
+// Matrix multiplication.
 template <typename T>
 Matrix<T> dot(Matrix<T>& A, Matrix<T>& B);
 

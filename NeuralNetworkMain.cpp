@@ -14,7 +14,7 @@ int main() {
     NeuralNetwork<float, float> half(std::vector<size_t>({1, 1}), std::vector<Activation>({Activation::linear}), 0.01f, InitState::RANDOM);
     half.train(X, y,1, 0.1f, 1000, false);
     Matrix<float> X_test = std::vector<std::vector<float>>({{-3}, {-2}, {-1}, {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}});
-    half.act(X_test).print(); std::cout << "\n" << std::endl;
+    half.act(X_test).print(); std::cout << "\n";
   
 
     // This neural network learns how to solve the OR-Gate problem.
@@ -22,19 +22,17 @@ int main() {
     Matrix<float> X_train = std::vector<std::vector<float>>({{0, 0}, {0, 1}, {1, 0}, {1, 1}});
     Matrix<float> y_train_or = std::vector<std::vector<float>>({{0}, {1}, {1}, {1}});
     NeuralNetwork<float, float> orGate(std::vector<size_t>({2, 1}), std::vector<Activation>({Activation::sigmoid}), 0.1f, InitState::RANDOM);
-    // NeuralNetwork<float, float> orGate(std::vector<size_t>({2, 2, 1}), std::vector<Activation>({Activation::relu, Activation::sigmoid}), 0.2f, InitState::RANDOM);
     orGate.train(X_train, y_train_or,1, 0.1f, 10000, false);
     orGate.act(X_train).print();
-    std::cout << "\n" << std::endl;
+    std::cout << "\n";
   
     // This neural network learns how to solve the AND-Gate problem. 
     std::cout << "Solving the AND-Gate problem." << std::endl;
     Matrix<float> y_train_and = std::vector<std::vector<float>>({{0}, {0}, {0}, {1}});
     NeuralNetwork<float, float> andGate(std::vector<size_t>({2, 1}), std::vector<Activation>({Activation::sigmoid}), 0.1f, InitState::RANDOM);
-    // NeuralNetwork<float, float> andGate(std::vector<size_t>({2, 2, 1}), std::vector<Activation>({Activation::relu, Activation::sigmoid}), 0.1f, InitState::RANDOM);
     andGate.train(X_train, y_train_and,1, 0.1f, 10000, false);
     andGate.act(X_train).print();
-    std::cout << "\n" << std::endl;
+    std::cout << "\n";
   
     // This neural network learns how to solve the XOR-Gate problem. 
     std::cout << "Solving the XOR-Gate problem." << std::endl;

@@ -16,26 +16,26 @@ enum class Activation {
 // ____________________________________________________________________________
 // LINEAR
 template <typename T>
-Matrix<T> linear(Matrix<T>& X);
+Matrix<T> linear(const Matrix<T>& X);
 
 template <typename T>
-Matrix<T> linear_derivative(Matrix<T>& X);
+Matrix<T> linear_derivative(const Matrix<T>& X);
 
 // ____________________________________________________________________________
 // RELU
 template <typename T>
-Matrix<T> relu(Matrix<T>& X);
+Matrix<T> relu(const Matrix<T>& X);
 
 template <typename T>
-Matrix<T> relu_derivative(Matrix<T>& X);
+Matrix<T> relu_derivative(const Matrix<T>& X);
 
 // ____________________________________________________________________________
 // UNIT-STEP 
 template <typename T>
-Matrix<T> step(Matrix<T>& X);
+Matrix<T> step(const Matrix<T>& X);
 
 template <typename T>
-Matrix<T> step_derivative(Matrix<T>& X);
+Matrix<T> step_derivative(const Matrix<T>& X);
 
 // ____________________________________________________________________________
 // SOFTMAX
@@ -56,10 +56,10 @@ Matrix<T> maxout_derivative(Matrix<T>& X);
 // ____________________________________________________________________________
 // SIGMOID 
 template <typename T>
-Matrix<T> sigmoid(Matrix<T>& X);
+Matrix<T> sigmoid(const Matrix<T>& X);
 
 template <typename T>
-Matrix<T> sigmoid_derivative(Matrix<T>& X);
+Matrix<T> sigmoid_derivative(const Matrix<T>& X);
 
 // ____________________________________________________________________________
 // TANH

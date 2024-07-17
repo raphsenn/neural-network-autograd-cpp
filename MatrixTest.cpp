@@ -335,3 +335,20 @@ TEST(addFunctionn, add) {
   ASSERT_EQ(C[2][1], 16);
   ASSERT_EQ(C[2][2], 18);
 }
+
+// ____________________________________________________________________________
+TEST(subFunctionn, sub) {
+  std::vector<std::vector<int>> vec1 = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+  Matrix<int> A = vec1;
+  Matrix<int> B = vec1;
+  Matrix<int> C = sub(A, B);
+  ASSERT_EQ(C[0][0], 0);
+  ASSERT_EQ(C[0][1], 0);
+  ASSERT_EQ(C[0][2], 0);
+  ASSERT_EQ(C[1][0], 0);
+  ASSERT_EQ(C[1][1], 0);
+  ASSERT_EQ(C[1][2], 0);
+  ASSERT_EQ(C[2][0], 0);
+  ASSERT_EQ(C[2][1], 0);
+  ASSERT_EQ(C[2][2], 0);
+}

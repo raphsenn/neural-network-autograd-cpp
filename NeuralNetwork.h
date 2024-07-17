@@ -49,7 +49,7 @@ private:
 
 
   // Forward propagation. 
-  Matrix<T> forward(Matrix<T> X);
+  Matrix<T> forward(const Matrix<T>& X);
 
   // Backpropagation.
   void backward(Matrix<T> X, Matrix<T> y);
@@ -74,6 +74,6 @@ public:
   void evaluate(std::vector<std::vector<T>> X, std::vector<std::vector<T>> y);
 
 
-  Matrix<T> act(Matrix<T> X);
+  Matrix<T> act(const Matrix<T>& X);
 
 };
