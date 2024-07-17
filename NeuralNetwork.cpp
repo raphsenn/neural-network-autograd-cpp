@@ -4,8 +4,8 @@
 #include "./NeuralNetwork.h"
 
 // ____________________________________________________________________________
-template <typename S, typename T>
-NeuralNetwork<S, T>::NeuralNetwork(std::vector<size_t> layers, std::vector<Activation> activation_functions, float learning_rate, InitState state) {
+template <typename T>
+NeuralNetwork<T>::NeuralNetwork(std::vector<size_t> layers, std::vector<Activation> activation_functions, float learning_rate, InitState state) {
   layerSizes_ = layers;
   numLayers_ = layers.size();
   learningRate_ = learning_rate;
@@ -41,8 +41,8 @@ NeuralNetwork<S, T>::NeuralNetwork(std::vector<size_t> layers, std::vector<Activ
 
 // ____________________________________________________________________________
 // Forward propagation:
-template <typename S, typename T>
-Matrix<T> NeuralNetwork<S, T>::forward(const Matrix<T>& X) {
+template <typename T>
+Matrix<T> NeuralNetwork<T>::forward(const Matrix<T>& X) {
   
   // Pre-active values (weighted sums).
   Z_.clear();
@@ -92,8 +92,8 @@ Matrix<T> NeuralNetwork<S, T>::forward(const Matrix<T>& X) {
 
 // ____________________________________________________________________________
 // Backpropagation:
-template <typename S, typename T>
-void NeuralNetwork<S, T>::backward(const Matrix<T> y) {
+template <typename T>
+void NeuralNetwork<T>::backward(const Matrix<T> y) {
 
   // __________________________________________________________________________
   // Backpropagation in a nutshell.
@@ -159,8 +159,8 @@ void NeuralNetwork<S, T>::backward(const Matrix<T> y) {
 }
 
 // ____________________________________________________________________________
-template <typename S, typename T>
-void NeuralNetwork<S, T>::train(Matrix<T> X, Matrix<T> y, size_t batch_size, float learning_rate, int epochs, bool verbose) {
+template <typename T>
+void NeuralNetwork<T>::train(Matrix<T> X, Matrix<T> y, size_t batch_size, float learning_rate, int epochs, bool verbose) {
   if (learning_rate != 0.1f) {learningRate_ = learning_rate; } 
   if (verbose) {
     std::cout << "Start training NeuralNetwork with parameters: " << std::endl;
@@ -179,12 +179,11 @@ void NeuralNetwork<S, T>::train(Matrix<T> X, Matrix<T> y, size_t batch_size, flo
 }
 
 // ____________________________________________________________________________
-template <typename S, typename T>
-Matrix<T> NeuralNetwork<S, T>::act(const Matrix<T>& X) {
+template <typename T>
+Matrix<T> NeuralNetwork<T>::act(const Matrix<T>& X) {
   return forward(X);
 }
 
 // ____________________________________________________________________________
-// Implicit instanziation for int and float.
-template class NeuralNetwork<int, float>;
-template class NeuralNetwork<float, float>;
+// Implicit instanziation for float.
+template class NeuralNetwork<float>;

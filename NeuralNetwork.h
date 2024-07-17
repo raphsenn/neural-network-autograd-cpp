@@ -7,7 +7,7 @@
 #include "./Activation.h"
 
 // Simple feed forward neural network.
-template <typename S, typename T>
+template <typename T>
 class NeuralNetwork {
 
 private:
