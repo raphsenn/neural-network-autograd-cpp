@@ -17,7 +17,7 @@ NeuralNetwork<S, T>::NeuralNetwork(std::vector<size_t> layers, std::vector<Activ
   }
 
   for (const auto& act : activation_functions) {
-    // Not pretty i guess.
+    // Not pretty i guess, maybie better to store pointers.
     // https://en.cppreference.com/w/cpp/utility/functional/function
     switch (act) { 
       case Activation::linear: 
@@ -32,7 +32,9 @@ NeuralNetwork<S, T>::NeuralNetwork(std::vector<size_t> layers, std::vector<Activ
       case Activation::sigmoid: 
         activationFunctions_.push_back([](Matrix<T>& X) {return sigmoid(X); }); 
         activationFunctionDerivatives_.push_back([](Matrix<T>& X) {return sigmoid_derivative(X); }); break;
-    
+      case Activation::softmax: break; 
+      case Activation::tanh: break; 
+      case Activation::maxout: break; 
     }
   }
 }
@@ -53,15 +55,18 @@ Matrix<T> NeuralNetwork<S, T>::forward(const Matrix<T>& X) {
 
   // Forward propagation.
   // In a nutshell:
-  // Z:
+  //
+  // Weightes sums Z:
   // Z_[0] = dot(X, W[0]) + BIAS[0]
   // Z_[1] = dot(ACT_0(dot(X, W[0]) + BIAS[0]), W[1]) + BIAS[1]
-  // Z_[2] = dot(ACT_1(dot(ACT_0(dot(X, W[0]) + BIAS[0]), W[1]) + BIAS[1]), W[2]) + BIAS[2
+  // Z_[2] = dot(ACT_1(dot(ACT_0(dot(X, W[0]) + BIAS[0]), W[1]) + BIAS[1]), W[2]) + BIAS[2]
+  // ...
   //
-  // A:
+  // Activations A:
   // A_[0] = X
   // A_[1] = ACT_0(dot(X, W[0]) + BIAS[0])
   // A_[2] = ACT_1(dot(ACT_0(dot(X, W[0]) + BIAS[0]), W[1]) + BIAS[1])
+  // ...
   // A_[n] = ACT_n(dot(... (ACT_1(dot(ACT_0(dot(X, W[0]) + BIAS[0]), W[1]) + BIAS[1]) ...W[n]) + BIAS[n]) 
 
   // Loop through each layer to perform forward propagation.
@@ -88,7 +93,7 @@ Matrix<T> NeuralNetwork<S, T>::forward(const Matrix<T>& X) {
 // ____________________________________________________________________________
 // Backpropagation:
 template <typename S, typename T>
-void NeuralNetwork<S, T>::backward(const Matrix<T> X, const Matrix<T> y) {
+void NeuralNetwork<S, T>::backward(const Matrix<T> y) {
 
   // __________________________________________________________________________
   // Backpropagation in a nutshell.
@@ -97,8 +102,10 @@ void NeuralNetwork<S, T>::backward(const Matrix<T> X, const Matrix<T> y) {
   // output error = output - y
   //
   // 2. Calculate delta for each layer by propagating the error backwards through the network.
-  // 
-  // 3. Update weights and biases.
+  //
+  // 3. Calculate gradient of weights and biases.
+  //  
+  // 4. Update weights and biases.
   // __________________________________________________________________________
 
   // Lot of copies happen here.
@@ -154,6 +161,7 @@ void NeuralNetwork<S, T>::backward(const Matrix<T> X, const Matrix<T> y) {
 // ____________________________________________________________________________
 template <typename S, typename T>
 void NeuralNetwork<S, T>::train(Matrix<T> X, Matrix<T> y, size_t batch_size, float learning_rate, int epochs, bool verbose) {
+  if (learning_rate != 0.1f) {learningRate_ = learning_rate; } 
   if (verbose) {
     std::cout << "Start training NeuralNetwork with parameters: " << std::endl;
     std::cout << "LearningRate: " << learningRate_ << std::endl;
@@ -163,7 +171,7 @@ void NeuralNetwork<S, T>::train(Matrix<T> X, Matrix<T> y, size_t batch_size, flo
   // Start training the NeuralNetwork.
   for (int epoch = 0; epoch < epochs; ++epoch) {
     Matrix<T> output = forward(X);
-    backward(X, y);
+    backward(y);
     if (verbose) { 
       if (epoch % 100 == 0) {std::cout << "Epoch: " << epoch << std::endl; }
     }

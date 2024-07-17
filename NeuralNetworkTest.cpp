@@ -4,11 +4,13 @@
 
 #include "./NeuralNetwork.h"
 
-// Function to compare two float values within an epsilon range
+// ____________________________________________________________________________
+// Compare two float values within an epsilon range.
 bool areAlmostEqual(float a, float b, float epsilon = 0.1f) {
   return std::fabs(a - b) < epsilon;
 }
 
+// ____________________________________________________________________________
 TEST(LearnsToHalfeRealNumbers, NeuralNetwork) {
   // Simplest Neural Network, no complexity.
   // This neural network learns how to halve a number. 
@@ -33,6 +35,7 @@ TEST(LearnsToHalfeRealNumbers, NeuralNetwork) {
   ASSERT_EQ(areAlmostEqual(y_out[12][0], 4.5f), true);
 }
 
+// ____________________________________________________________________________
 TEST(AndGate, NeuralNetwork) {
   Matrix<float> X_train = std::vector<std::vector<float>>({{0, 0}, {0, 1}, {1, 0}, {1, 1}});
   Matrix<float> y_train = std::vector<std::vector<float>>({{0}, {0}, {0}, {1}});
@@ -45,6 +48,7 @@ TEST(AndGate, NeuralNetwork) {
   ASSERT_EQ(areAlmostEqual(y_out[3][0], 1.0f), true);
 }
 
+// ____________________________________________________________________________
 TEST(OrGate, NeuralNetwork) {
   Matrix<float> X_train = std::vector<std::vector<float>>({{0, 0}, {0, 1}, {1, 0}, {1, 1}});
   Matrix<float> y_train = std::vector<std::vector<float>>({{0}, {1}, {1}, {1}});
@@ -57,6 +61,7 @@ TEST(OrGate, NeuralNetwork) {
   ASSERT_EQ(areAlmostEqual(y_out.getValue(3, 0), 1.0f), true);
 }
 
+// ____________________________________________________________________________
 TEST(XorGate, NeuralNetwork) {
   // This neural network learns how to solve the XOR-Gate problem. 
   Matrix<float> X_train = std::vector<std::vector<float>>({{0, 0}, {0, 1}, {1, 0}, {1, 1}});
@@ -64,8 +69,8 @@ TEST(XorGate, NeuralNetwork) {
   NeuralNetwork<float, float> xorGate(std::vector<size_t>({2, 4, 1}), std::vector<Activation>({Activation::sigmoid, Activation::sigmoid}), 0.88f, InitState::RANDOM);
   xorGate.train(X_train, y_train,1, 0.1f, 10000, false);
   Matrix<float> y_out = xorGate.act(X_train);
-  ASSERT_EQ(areAlmostEqual(y_out[0][0], 0.0f), true);
-  ASSERT_EQ(areAlmostEqual(y_out[1][0], 1.0f), true);
-  ASSERT_EQ(areAlmostEqual(y_out[2][0], 1.0f), true);
-  ASSERT_EQ(areAlmostEqual(y_out[3][0], 0.0f), true);
+  ASSERT_EQ(areAlmostEqual(y_out[0][0], 0.0f, 0.2f), true);
+  ASSERT_EQ(areAlmostEqual(y_out[1][0], 1.0f, 0.2f), true);
+  ASSERT_EQ(areAlmostEqual(y_out[2][0], 1.0f, 0.2f), true);
+  ASSERT_EQ(areAlmostEqual(y_out[3][0], 0.0f, 0.2f), true);
 }

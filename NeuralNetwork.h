@@ -23,7 +23,7 @@ private:
   std::vector<size_t> layerSizes_;
 
   // Number of layers.
-  int numLayers_;
+  size_t numLayers_;
 
   // Weights.
   std::vector<Matrix<T>> weights_; 
@@ -52,7 +52,7 @@ private:
   Matrix<T> forward(const Matrix<T>& X);
 
   // Backpropagation.
-  void backward(Matrix<T> X, Matrix<T> y);
+  void backward(Matrix<T> y);
 
 public:
   // ____________________________________________________________________________

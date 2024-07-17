@@ -8,6 +8,8 @@
 template <typename T>
 Matrix<T> linear(const Matrix<T>& X) { return X; }
 
+// ____________________________________________________________________________
+// Linear derivative
 template <typename T>
 Matrix<T> linear_derivative(const Matrix<T>& X) { return Matrix<T>(X.getRows(), X.getCols(), InitState::ONES); }
 
@@ -20,6 +22,8 @@ Matrix<T> relu(const Matrix<T>& X) {
   return result;
 }
 
+// ____________________________________________________________________________
+// Relu derivative
 template <typename T>
 Matrix<T> relu_derivative(const Matrix<T>& X) {
   Matrix<T> result(X.getRows(), X.getCols(), InitState::EMPTY);
@@ -44,6 +48,8 @@ Matrix<T> step(const Matrix<T>& X) {
   return result;
  }
 
+// ____________________________________________________________________________
+// Step derivative
 template <typename T>
 Matrix<T> step_derivative(const Matrix<T>& X) {
   Matrix<T> result(X.getRows(), X.getCols(), InitState::EMPTY);
@@ -68,6 +74,8 @@ Matrix<T> sigmoid(const Matrix<T>& X) {
   return result;
  }
 
+// ____________________________________________________________________________
+// Sigmoid derivative
 template <typename T>
 Matrix<T> sigmoid_derivative(const Matrix<T>& X) {
   Matrix<T> result(X.getRows(), X.getCols(), InitState::EMPTY);
