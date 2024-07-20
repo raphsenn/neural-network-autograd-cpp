@@ -4,7 +4,6 @@
 
 #include "./Matrix.h"
 
-
 // ____________________________________________________________________________
 // Constructors:
 // ____________________________________________________________________________
@@ -25,7 +24,7 @@ TEST(ConstructorInitStateNULL, Matrix) {
   ASSERT_FLOAT_EQ(B[1][0], 0.0f);
   ASSERT_FLOAT_EQ(B[1][1], 0.0f);
   ASSERT_FLOAT_EQ(B[1][2], 0.0f);
-  
+
   Matrix<double> C(3, 3, InitState::ZERO);
   ASSERT_EQ(C.getRows(), size_t(3));
   ASSERT_EQ(C.getCols(), size_t(3));
@@ -60,7 +59,8 @@ TEST(CopyConstructorVector, Matrix) {
   ASSERT_EQ(A[2][1], 8);
   ASSERT_EQ(A[2][2], 9);
 
-  std::vector<std::vector<float>> vectorB = {{0.1f, 0.2f, 0.3f}, {0.4f, 0.5f, 0.6f}, {0.7f, 0.8f, 0.9f}};
+  std::vector<std::vector<float>> vectorB = {
+      {0.1f, 0.2f, 0.3f}, {0.4f, 0.5f, 0.6f}, {0.7f, 0.8f, 0.9f}};
   Matrix<float> B(vectorB);
   ASSERT_FLOAT_EQ(B[0][0], 0.1f);
   ASSERT_FLOAT_EQ(B[0][1], 0.2f);
@@ -79,7 +79,8 @@ TEST(CopyConstructorVector, Matrix) {
 
 // ____________________________________________________________________________
 TEST(CopyAssignmentVector, Matrix) {
-  Matrix<int> A = std::vector<std::vector<int>>({{1, 2, 3}, {4, 5, 6}, {7, 8, 9}});
+  Matrix<int> A =
+      std::vector<std::vector<int>>({{1, 2, 3}, {4, 5, 6}, {7, 8, 9}});
   ASSERT_EQ(A[0][0], 1);
   ASSERT_EQ(A[0][1], 2);
   ASSERT_EQ(A[0][2], 3);
@@ -90,7 +91,8 @@ TEST(CopyAssignmentVector, Matrix) {
   ASSERT_EQ(A[2][1], 8);
   ASSERT_EQ(A[2][2], 9);
 
-  Matrix<float> B = std::vector<std::vector<float>>({{0.1f, 0.2f, 0.3f}, {0.4f, 0.5f, 0.6f}, {0.7f, 0.8f, 0.9f}});
+  Matrix<float> B = std::vector<std::vector<float>>(
+      {{0.1f, 0.2f, 0.3f}, {0.4f, 0.5f, 0.6f}, {0.7f, 0.8f, 0.9f}});
   ASSERT_FLOAT_EQ(B[0][0], 0.1f);
   ASSERT_FLOAT_EQ(B[0][1], 0.2f);
   ASSERT_FLOAT_EQ(B[0][2], 0.3f);
@@ -111,24 +113,27 @@ TEST(CopyAssignmentVector, Matrix) {
 }
 
 // ____________________________________________________________________________
-TEST (EqualityINT, Matrix) {
+TEST(EqualityINT, Matrix) {
   Matrix<int> A = std::vector<std::vector<int>>({{1, 2}, {3, 4}});
   Matrix<int> B = std::vector<std::vector<int>>({{1, 2}, {3, 4}});
   EXPECT_EQ(A, B);
 }
 
 // ____________________________________________________________________________
-TEST (EqualityFLOAT, Matrix) {
-  Matrix<float> A = std::vector<std::vector<float>>({{0.1f, 0.2f}, {3.3f, 4.4f}});
-  Matrix<float> B = std::vector<std::vector<float>>({{0.1f, 0.2f}, {3.3f, 4.4f}});
+TEST(EqualityFLOAT, Matrix) {
+  Matrix<float> A =
+      std::vector<std::vector<float>>({{0.1f, 0.2f}, {3.3f, 4.4f}});
+  Matrix<float> B =
+      std::vector<std::vector<float>>({{0.1f, 0.2f}, {3.3f, 4.4f}});
   EXPECT_EQ(A, B);
 
-  Matrix<float> C = std::vector<std::vector<float>>({{0.1f, 0.2f}, {3.2f, 4.4f}});
+  Matrix<float> C =
+      std::vector<std::vector<float>>({{0.1f, 0.2f}, {3.2f, 4.4f}});
   EXPECT_FALSE(A == C);
 }
 
 // ____________________________________________________________________________
-TEST (EqualityDOUBLE, Matrix) {
+TEST(EqualityDOUBLE, Matrix) {
   Matrix<double> A = std::vector<std::vector<double>>({{0.1, 0.2}, {3.3, 4.4}});
   Matrix<double> B = std::vector<std::vector<double>>({{0.1, 0.2}, {3.3, 4.4}});
   EXPECT_EQ(A, B);
@@ -139,7 +144,7 @@ TEST (EqualityDOUBLE, Matrix) {
 
 // ____________________________________________________________________________
 // Linear Algebra Operations:
-// ____________________________________________________________________________ 
+// ____________________________________________________________________________
 
 // ____________________________________________________________________________
 TEST(AdditionINT, Matrix) {
@@ -171,11 +176,13 @@ TEST(AdditionINT, Matrix) {
 // ____________________________________________________________________________
 TEST(AdditionFLOAT, Matrix) {
   Matrix<float> A = std::vector<std::vector<float>>({{0.1f}});
-  A.add(A);  
+  A.add(A);
   ASSERT_FLOAT_EQ(A[0][0], 0.2f);
 
-  Matrix<float> B = std::vector<std::vector<float>>({{0.11f, 0.22f, 0.33f}, {-1.1f, -2.2f, -3.3f}});
-  Matrix<float> C = std::vector<std::vector<float>>({{-0.01f, -0.02f, -0.03f}, {1.0f, 2.0f, 3.0f}});
+  Matrix<float> B = std::vector<std::vector<float>>(
+      {{0.11f, 0.22f, 0.33f}, {-1.1f, -2.2f, -3.3f}});
+  Matrix<float> C = std::vector<std::vector<float>>(
+      {{-0.01f, -0.02f, -0.03f}, {1.0f, 2.0f, 3.0f}});
   B.add(C);
   ASSERT_FLOAT_EQ(B[0][0], 0.1f);
   ASSERT_FLOAT_EQ(B[0][1], 0.2f);
@@ -184,7 +191,6 @@ TEST(AdditionFLOAT, Matrix) {
   ASSERT_FLOAT_EQ(B[1][1], -0.2f);
   ASSERT_FLOAT_EQ(B[1][2], -0.3f);
 }
-
 
 // ____________________________________________________________________________
 TEST(AdditionThrow, Matrix) {
@@ -268,8 +274,9 @@ TEST(Transpose, Matrix) {
 // ____________________________________________________________________________
 TEST(Maximum, Matrix) {
   Matrix<int> A = std::vector<std::vector<int>>({{-3, 2, -1}, {1, 11, -2}});
-  A.maximum(0); 
-  EXPECT_EQ(A, Matrix<int>(std::vector<std::vector<int>>({{0, 2, 0}, {1, 11, 0}})));
+  A.maximum(0);
+  EXPECT_EQ(
+      A, Matrix<int>(std::vector<std::vector<int>>({{0, 2, 0}, {1, 11, 0}})));
 }
 
 // ____________________________________________________________________________
@@ -279,9 +286,10 @@ TEST(Maximum, Matrix) {
 // ____________________________________________________________________________
 TEST(Print, Matrix) {
   Matrix<int> A = std::vector<std::vector<int>>({{1}});
-  Matrix<int> B = std::vector<std::vector<int>>({{1, 2, 3}, {4, 5, 6}, {7, 8, 9}});
-  
-  // Test printing. 
+  Matrix<int> B =
+      std::vector<std::vector<int>>({{1, 2, 3}, {4, 5, 6}, {7, 8, 9}});
+
+  // Test printing.
   testing::internal::CaptureStdout();
   A.print();
   std::string A_as_string = testing::internal::GetCapturedStdout();
@@ -312,7 +320,7 @@ TEST(dotFunction, dot) {
   // Dot product (Euclidean space).
   Matrix<int> D = std::vector<std::vector<int>>({{1, 2, 3, 4, 5}});
   Matrix<int> E = std::vector<std::vector<int>>({{1}, {2}, {3}, {4}, {5}});
-  
+
   Matrix<int> F = dot(D, E);
   ASSERT_EQ(F.getRows(), size_t(1));
   ASSERT_EQ(F.getCols(), size_t(1));

@@ -1,32 +1,30 @@
 
+#include <cmath>
 #include <random>
 #include <type_traits>
-#include <cmath>
 
 // ____________________________________________________________________________
-template <typename T>
-struct value {};
+// value struct, to create zero, one, random, exp values for templated types.
+template <typename T> struct value {};
 
 // ____________________________________________________________________________
 // INT:
-template <>
-struct value<int> {
+template <> struct value<int> {
   static int zero() { return 0; }
   static int one() { return 1; }
   static int random() {
     static std::random_device rd;
     static std::mt19937 gen(rd());
-    static std::uniform_int_distribution<int> distribution(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
+    static std::uniform_int_distribution<int> distribution(
+        std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
     return distribution(gen);
   }
   static int e(int x) { return std::exp(x); }
-
 };
 
 // ____________________________________________________________________________
 // FLOAT:
-template <>
-struct value<float> {
+template <> struct value<float> {
   static float zero() { return 0.0f; }
   static float one() { return 1.0f; }
   static float random() {
@@ -40,8 +38,7 @@ struct value<float> {
 
 // ____________________________________________________________________________
 // DOUBLE:
-template <>
-struct value<double> {
+template <> struct value<double> {
   static double zero() { return 0.0; }
   static double one() { return 0.0; }
   static double random() {
@@ -51,5 +48,4 @@ struct value<double> {
     return distribution(gen);
   }
   static double e(double x) { return std::exp(x); }
-
 };

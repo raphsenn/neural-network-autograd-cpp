@@ -3,20 +3,18 @@
 
 #include <functional>
 
-#include "./Matrix.h"
 #include "./Activation.h"
+#include "./Matrix.h"
 
 // Simple feed forward neural network.
-template <typename T>
-class NeuralNetwork {
+template <typename T> class NeuralNetwork {
 
 private:
-
   // ____________________________________________________________________________
   // NeuralNetwork settings:
   // ____________________________________________________________________________
 
-  // Learning rate. 
+  // Learning rate.
   float learningRate_;
 
   // Layer sizes.
@@ -26,20 +24,21 @@ private:
   size_t numLayers_;
 
   // Weights.
-  std::vector<Matrix<T>> weights_; 
-  
+  std::vector<Matrix<T>> weights_;
+
   // Biases.
-  std::vector<Matrix<T>> biases_; 
+  std::vector<Matrix<T>> biases_;
 
   // Activation functions.
-  std::vector<std::function<Matrix<T>(Matrix<T>&)>> activationFunctions_;
+  std::vector<std::function<Matrix<T>(Matrix<T> &)>> activationFunctions_;
 
   // Activation function derivatives.
-  std::vector<std::function<Matrix<T>(Matrix<T>&)>> activationFunctionDerivatives_;
+  std::vector<std::function<Matrix<T>(Matrix<T> &)>>
+      activationFunctionDerivatives_;
 
-// ____________________________________________________________________________
-// Forward, backward propagation:
-// ____________________________________________________________________________
+  // ____________________________________________________________________________
+  // Forward, backward propagation:
+  // ____________________________________________________________________________
 
   // Storing activations.
   std::vector<Matrix<T>> A_;
@@ -47,9 +46,8 @@ private:
   // Stroing Zs
   std::vector<Matrix<T>> Z_;
 
-
-  // Forward propagation. 
-  Matrix<T> forward(const Matrix<T>& X);
+  // Forward propagation.
+  Matrix<T> forward(const Matrix<T> &X);
 
   // Backpropagation.
   void backward(Matrix<T> y);
@@ -58,22 +56,25 @@ public:
   // ____________________________________________________________________________
   // Constructor:
   // ____________________________________________________________________________
-  
-  NeuralNetwork(std::vector<size_t> layers, std::vector<Activation> activation_functions, float learning_rate=0.1f, InitState state = InitState::RANDOM);
+
+  NeuralNetwork(std::vector<size_t> layers,
+                std::vector<Activation> activation_functions,
+                float learning_rate = 0.1f,
+                InitState state = InitState::RANDOM);
 
   // ____________________________________________________________________________
   // Training and evaluation:
   // ____________________________________________________________________________
-  
+
   // Trains the neural net.
-  void train(Matrix<T> X, Matrix<T> y, size_t batchSize=1, float learningRate=0.1f, int epochs=1, bool verbose=false);
-  void train(std::vector<std::vector<T>> X, std::vector<std::vector<T>> y, size_t batchSize, float learningRate);
+  void train(Matrix<T> X, Matrix<T> y, size_t batchSize = 1,
+             float learningRate = 0.1f, int epochs = 1, bool verbose = false);
+  void train(std::vector<std::vector<T>> X, std::vector<std::vector<T>> y,
+             size_t batchSize, float learningRate);
 
   // Evaluates neural net.
   void evaluate(Matrix<T> X, Matrix<T> y);
   void evaluate(std::vector<std::vector<T>> X, std::vector<std::vector<T>> y);
 
-
-  Matrix<T> act(const Matrix<T>& X);
-
+  Matrix<T> act(const Matrix<T> &X);
 };
