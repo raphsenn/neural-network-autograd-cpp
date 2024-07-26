@@ -68,6 +68,7 @@ int main() {
         0.88f, InitState::RANDOM);
     xorGate.train(X_train, y_train_xor, 1, 0.1f, 10000, false);
     xorGate.act(X_train).print();
+    xorGate.save("XOR_parameters.bin");
   }
   return 1;
 }

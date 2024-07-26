@@ -117,3 +117,35 @@ TEST(NotGate, NeuralNetwork) {
   ASSERT_EQ(areAlmostEqual(y_out[0][0], 1.0f), true);
   ASSERT_EQ(areAlmostEqual(y_out[1][0], 0.0f), true);
 }
+
+// ____________________________________________________________________________
+TEST(SaveAndLoad, NeuralNetwork) {
+  // This neural network learns how to solve the XOR-Gate problem.
+  Matrix<float> X_train =
+      std::vector<std::vector<float>>({{0, 0}, {0, 1}, {1, 0}, {1, 1}});
+  Matrix<float> y_train = std::vector<std::vector<float>>({{0}, {1}, {1}, {0}});
+  NeuralNetwork<float> xorGate(
+      std::vector<size_t>({2, 4, 1}),
+      std::vector<Activation>({Activation::sigmoid, Activation::sigmoid}),
+      0.88f, InitState::RANDOM);
+  xorGate.train(X_train, y_train, 1, 0.1f, 10000, false);
+
+  // Save weights and biases. 
+  xorGate.save("XOR_data.bin");
+
+  // Create new neural net.
+  NeuralNetwork<float> xorGate_2(
+      std::vector<size_t>({2, 4, 1}),
+      std::vector<Activation>({Activation::sigmoid, Activation::sigmoid}),
+      0.88f, InitState::EMPTY);
+
+  // Load weights and biases.
+  xorGate_2.load("XOR_data.bin");
+
+  // Test loaded weights and biases.
+  Matrix<float> y_out = xorGate_2.act(X_train);
+  ASSERT_EQ(areAlmostEqual(y_out[0][0], 0.0f, 0.2f), true);
+  ASSERT_EQ(areAlmostEqual(y_out[1][0], 1.0f, 0.2f), true);
+  ASSERT_EQ(areAlmostEqual(y_out[2][0], 1.0f, 0.2f), true);
+  ASSERT_EQ(areAlmostEqual(y_out[3][0], 0.0f, 0.2f), true);
+}

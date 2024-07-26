@@ -32,6 +32,7 @@ clean:
 	rm -f *Main
 	rm -f *Test
 	rm -f *.o
+	rm -f *.bin
 
 format:
 	clang-format-14 -i *.cpp *.h

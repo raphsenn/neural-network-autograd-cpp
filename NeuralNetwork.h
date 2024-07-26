@@ -12,7 +12,6 @@ template <typename T> class NeuralNetwork {
 private:
   // ____________________________________________________________________________
   // NeuralNetwork settings:
-  // ____________________________________________________________________________
 
   // Learning rate.
   float learningRate_;
@@ -38,7 +37,6 @@ private:
 
   // ____________________________________________________________________________
   // Forward, backward propagation:
-  // ____________________________________________________________________________
 
   // Storing activations.
   std::vector<Matrix<T>> A_;
@@ -55,7 +53,8 @@ private:
 public:
   // ____________________________________________________________________________
   // Constructor:
-  // ____________________________________________________________________________
+
+  NeuralNetwork() = default;
 
   NeuralNetwork(std::vector<size_t> layers,
                 std::vector<Activation> activation_functions,
@@ -64,17 +63,22 @@ public:
 
   // ____________________________________________________________________________
   // Training and evaluation:
-  // ____________________________________________________________________________
 
   // Trains the neural net.
   void train(Matrix<T> X, Matrix<T> y, size_t batchSize = 1,
              float learningRate = 0.1f, int epochs = 1, bool verbose = false);
-  void train(std::vector<std::vector<T>> X, std::vector<std::vector<T>> y,
-             size_t batchSize, float learningRate);
 
-  // Evaluates neural net.
-  void evaluate(Matrix<T> X, Matrix<T> y);
-  void evaluate(std::vector<std::vector<T>> X, std::vector<std::vector<T>> y);
-
+  // Generates an output with input data X.
   Matrix<T> act(const Matrix<T> &X);
+  
+  // Evaluates neural net.
+  // Calculates performance metrics precision, recall and accuracy.
+  // Prints performance metrics.
+  void evaluate(Matrix<T> X, Matrix<T> y, bool binary=false);
+
+  // Saves weights and biases to binary file.
+  void save(std::string fileName="neural_network_data.bin");
+
+  // Loads weights and biases from a binary file.
+  void load(std::string fileName);
 };

@@ -90,7 +90,8 @@ public:
   // m x n -> n x m
   Matrix<T> &transpose();
 
-  Matrix<T> transpose2();
+  // Same as transpose, just returns a new object.
+  Matrix<T> transpose_copy();
 
   // Scalar multiplication.
   Matrix<T> scalMul(T scalar);
@@ -111,6 +112,9 @@ public:
 
   // Returns number of cols.
   std::size_t getCols() const;
+
+  // Returns matrix data.
+  std::vector<std::vector<T>> getData() const;
 
   // Returns of Value at row, col in matrix.
   T getValue(const size_t row, const size_t col) const;

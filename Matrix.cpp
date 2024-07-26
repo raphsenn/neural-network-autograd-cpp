@@ -195,7 +195,7 @@ template <typename T> Matrix<T> &Matrix<T>::transpose() {
 }
 
 // ____________________________________________________________________________
-template <typename T> Matrix<T> Matrix<T>::transpose2() {
+template <typename T> Matrix<T> Matrix<T>::transpose_copy() {
   Matrix<T> transposed(cols_, rows_, InitState::EMPTY);
   for (size_t row = 0; row < rows_; ++row) {
     for (size_t col = 0; col < cols_; ++col) {
@@ -247,10 +247,19 @@ template <typename T> Matrix<T> Matrix<T>::sum(bool axis) const {
 }
 
 // ____________________________________________________________________________
+// More methods (public):
+// ____________________________________________________________________________
+
+// ____________________________________________________________________________
 template <typename T> std::size_t Matrix<T>::getRows() const { return rows_; }
 
 // ____________________________________________________________________________
 template <typename T> std::size_t Matrix<T>::getCols() const { return cols_; }
+
+// ____________________________________________________________________________
+template <typename T> std::vector<std::vector<T>> Matrix<T>::getData() const {
+  return matrix_;
+}
 
 // ____________________________________________________________________________
 template <typename T> void Matrix<T>::fillZeros() {
@@ -295,6 +304,28 @@ template <typename T> void Matrix<T>::print() {
   }
   std::cout << "])\n";
 }
+
+// ____________________________________________________________________________
+template <typename T>
+T Matrix<T>::getValue(const size_t row, const size_t col) const {
+  if (row >= rows_) {
+    throw std::out_of_range("Row index out of range.");
+  }
+  if (col >= cols_) {
+    throw std::out_of_range("Col index out of range.");
+  }
+  return matrix_[row][col];
+}
+
+// ____________________________________________________________________________
+// Explicit instantiations (for Matrix class) for int, float and double.
+template class Matrix<int>;
+template class Matrix<float>;
+template class Matrix<double>;
+
+// ____________________________________________________________________________
+// Linear Algebra functions:
+// ____________________________________________________________________________
 
 // ____________________________________________________________________________
 template <typename T> Matrix<T> dot(Matrix<T> &A, Matrix<T> &B) {
@@ -361,17 +392,6 @@ template <typename T> Matrix<T> add(Matrix<T> &A, Matrix<T> &B) {
 }
 
 // ____________________________________________________________________________
-template <typename T>
-T Matrix<T>::getValue(const size_t row, const size_t col) const {
-  if (row >= rows_) {
-    throw std::out_of_range("Row index out of range.");
-  }
-  if (col >= cols_) {
-    throw std::out_of_range("Col index out of range.");
-  }
-  return matrix_[row][col];
-}
-
 template <typename T> Matrix<T> sub(Matrix<T> &A, Matrix<T> &B) {
   // Scalar addition.
   if (A.getCols() == B.getCols() && B.getRows() == 1) {
@@ -428,10 +448,7 @@ template <typename T> Matrix<T> dotElementWise(Matrix<T> &A, Matrix<T> &B) {
 }
 
 // ____________________________________________________________________________
-// Explicit instantiations for int, float and double.
-template class Matrix<int>;
-template class Matrix<float>;
-template class Matrix<double>;
+// Explicit instantiations (for linear algebra helper functions) for int, float.
 
 template Matrix<int> dot<int>(Matrix<int> &A, Matrix<int> &B);
 template Matrix<float> dot<float>(Matrix<float> &A, Matrix<float> &B);

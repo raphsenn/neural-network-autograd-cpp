@@ -1,5 +1,6 @@
 
 #include <algorithm>
+#include <fstream>
 
 #include "./NeuralNetwork.h"
 
@@ -103,7 +104,7 @@ template <typename T> Matrix<T> NeuralNetwork<T>::forward(const Matrix<T> &X) {
 
 // ____________________________________________________________________________
 // Backpropagation:
-template <typename T> void NeuralNetwork<T>::backward(const Matrix<T> y) {
+template <typename T> void NeuralNetwork<T>::backward(Matrix<T> y) {
 
   // __________________________________________________________________________
   // Backpropagation in a nutshell.
@@ -140,7 +141,7 @@ template <typename T> void NeuralNetwork<T>::backward(const Matrix<T> y) {
   // This was kind of hard xd.
   for (size_t i = numLayers_ - 2; i > 0; --i) {
     // Transpose the weight matrix of the next layer
-    Matrix<T> W = std::move(weights_[i].transpose2());
+    Matrix<T> W = std::move(weights_[i].transpose_copy());
 
     // Calculate delta for the current layer
     // delta = (delta_next * W_next) * activation_derivative
@@ -155,7 +156,7 @@ template <typename T> void NeuralNetwork<T>::backward(const Matrix<T> y) {
   for (size_t i = 0; i < numLayers_ - 1; ++i) {
     // Compute weight gradients
     // dW = A_[i].transpose() * delta[i]
-    Matrix<T> A_i_transposed = std::move(A_[i].transpose2());
+    Matrix<T> A_i_transposed = std::move(A_[i].transpose_copy());
     Matrix<T> dW = std::move(dot(A_i_transposed, deltas[i]));
     // Update weights.
     dW = dW.scalMul(learningRate_);
@@ -197,6 +198,118 @@ void NeuralNetwork<T>::train(Matrix<T> X, Matrix<T> y, size_t batch_size,
 // ____________________________________________________________________________
 template <typename T> Matrix<T> NeuralNetwork<T>::act(const Matrix<T> &X) {
   return forward(X);
+}
+
+// ____________________________________________________________________________
+template <typename T>
+void NeuralNetwork<T>::evaluate(Matrix<T> X, Matrix<T> y, bool binary) {
+  Matrix<T> y_out = forward(X);
+  float acc = 0.0f;
+  for (size_t row = 0; row < y.getRows(); ++row) {
+    for (size_t col = 0; col < y.getCols(); ++col) {
+      if (y_out[row][col] == y[row][col]) {
+        ++acc;
+      };
+    }
+  }
+  float accuracy = acc / static_cast<float>(y_out.getRows() * y_out.getCols());
+  std::cout << "Accuracy: " << accuracy << "%" << std::endl;
+}
+
+// ____________________________________________________________________________
+template <typename T> void NeuralNetwork<T>::save(std::string fileName) {
+  std::ofstream outFile(fileName, std::ios::binary);
+
+  // Write number of layers.
+  outFile.write(reinterpret_cast<const char *>(&numLayers_),
+                sizeof(numLayers_));
+
+  // Write the sizes of each layer.
+  for (const auto &size : layerSizes_) {
+    outFile.write(reinterpret_cast<const char *>(&size), sizeof(size));
+  }
+  // Write weights
+  for (const auto &weightMatrix : weights_) {
+    auto data = weightMatrix.getData();
+    std::size_t rows = weightMatrix.getRows();
+    std::size_t cols = weightMatrix.getCols();
+    outFile.write(reinterpret_cast<const char *>(&rows), sizeof(rows));
+    outFile.write(reinterpret_cast<const char *>(&cols), sizeof(cols));
+    for (const auto &row : data) {
+      outFile.write(reinterpret_cast<const char *>(row.data()),
+                    row.size() * sizeof(T));
+    }
+  }
+
+  // Write biases
+  for (const auto &biasMatrix : biases_) {
+    auto data = biasMatrix.getData();
+    std::size_t rows = biasMatrix.getRows();
+    std::size_t cols = biasMatrix.getCols();
+    outFile.write(reinterpret_cast<const char *>(&rows), sizeof(rows));
+    outFile.write(reinterpret_cast<const char *>(&cols), sizeof(cols));
+    for (const auto &row : data) {
+      outFile.write(reinterpret_cast<const char *>(row.data()),
+                    row.size() * sizeof(T));
+    }
+  }
+  outFile.close();
+}
+
+// ____________________________________________________________________________
+template <typename T> void NeuralNetwork<T>::load(std::string fileName) {
+  std::ifstream inFile(fileName, std::ios::binary);
+
+  if (!inFile) {
+    throw std::runtime_error("Cannot open file for reading");
+  }
+
+  // Read the number of layers
+  inFile.read(reinterpret_cast<char *>(&numLayers_), sizeof(numLayers_));
+
+  // Read the sizes of each layer
+  layerSizes_.resize(numLayers_);
+  for (auto &size : layerSizes_) {
+    inFile.read(reinterpret_cast<char *>(&size), sizeof(size));
+  }
+
+  // Read weights
+  weights_.clear();
+  for (size_t i = 0; i < numLayers_ - 1;
+       ++i) { // Assuming weights are between layers
+    std::size_t rows, cols;
+    inFile.read(reinterpret_cast<char *>(&rows), sizeof(rows));
+    inFile.read(reinterpret_cast<char *>(&cols), sizeof(cols));
+    Matrix<T> weightMatrix(rows, cols, InitState::EMPTY);
+    auto data = weightMatrix.getData();
+    for (auto &row : data) {
+      row.resize(cols);
+      inFile.read(reinterpret_cast<char *>(row.data()), row.size() * sizeof(T));
+    }
+    weightMatrix = data;
+    // weightMatrix.setData(data);
+    weights_.push_back(weightMatrix);
+  }
+
+  // Read biases
+  biases_.clear();
+  for (size_t i = 0; i < numLayers_ - 1;
+       ++i) { // Assuming biases are for each layer except the input
+    std::size_t rows, cols;
+    inFile.read(reinterpret_cast<char *>(&rows), sizeof(rows));
+    inFile.read(reinterpret_cast<char *>(&cols), sizeof(cols));
+    Matrix<T> biasMatrix(rows, cols, InitState::EMPTY);
+    auto data = biasMatrix.getData();
+    for (auto &row : data) {
+      row.resize(cols);
+      inFile.read(reinterpret_cast<char *>(row.data()), row.size() * sizeof(T));
+    }
+    biasMatrix = data;
+    // biasMatrix.setData(data);
+    biases_.push_back(biasMatrix);
+  }
+
+  inFile.close();
 }
 
 // ____________________________________________________________________________
