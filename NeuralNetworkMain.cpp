@@ -62,13 +62,15 @@ int main() {
     std::cout << "Solving the XOR-Gate problem." << std::endl;
     Matrix<float> y_train_xor =
         std::vector<std::vector<float>>({{0}, {1}, {1}, {0}});
+    
     NeuralNetwork<float> xorGate(
         std::vector<size_t>({2, 4, 1}),
         std::vector<Activation>({Activation::sigmoid, Activation::sigmoid}),
         0.88f, InitState::RANDOM);
-    xorGate.train(X_train, y_train_xor, 1, 0.1f, 10000, false);
+    
+    xorGate.train(X_train, y_train_xor, 1, 0.1f, 10000, true);
     xorGate.act(X_train).print();
-    xorGate.save("XOR_parameters.bin");
+    xorGate.evaluate(X, y);
   }
   return 1;
 }

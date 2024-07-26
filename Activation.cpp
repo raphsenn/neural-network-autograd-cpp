@@ -89,6 +89,66 @@ template <typename T> Matrix<T> sigmoid_derivative(const Matrix<T> &X) {
 }
 
 // ____________________________________________________________________________
+// Tanh
+template <typename T> Matrix<T> tanh(const Matrix<T> &X) {
+  Matrix<T> result(X.getRows(), X.getCols(), InitState::EMPTY);
+  for (size_t row = 0; row < X.getRows(); ++row) {
+    for (size_t col = 0; col < X.getCols(); ++col) {
+      result[row][col] = value<T>::tanh(X.getValue(row, col));
+    }
+  }
+  return result;
+}
+
+// ____________________________________________________________________________
+// Tanh derivative
+template <typename T> Matrix<T> tanh_derivative(const Matrix<T> &X) {
+  Matrix<T> result(X.getRows(), X.getCols(), InitState::EMPTY);
+  for (size_t row = 0; row < X.getRows(); ++row) {
+    for (size_t col = 0; col < X.getCols(); ++col) {
+      result[row][col] = value<T>::one() - std::pow(value<T>::tanh(X.getValue(row, col)), 2.0);
+    }
+  }
+  return result;
+}
+
+// ____________________________________________________________________________
+// Softmax
+template <typename T> Matrix<T> softmax(const Matrix<T> &X) {
+  Matrix<T> result(X.getRows(), X.getCols(), InitState::EMPTY);
+  for (size_t row = 0; row < X.getRows(); ++row) {
+    for (size_t col = 0; col < X.getCols(); ++col) {
+      result[row][col] = value<T>::e(X.getValue(row, col)) / sum(exp(X));
+    }
+  }
+  return result;
+}
+
+// ____________________________________________________________________________
+// Softmax derivative 
+template <typename T> Matrix<T> softmax_derivative(const Matrix<T> &X) {
+  Matrix<T> result(X.getRows(), X.getCols(), InitState::EMPTY);
+  for (size_t row = 0; row < X.getRows(); ++row) {
+    for (size_t col = 0; col < X.getCols(); ++col) {
+      result[row][col] = value<T>::one() - std::pow(value<T>::tanh(X.getValue(row, col)), 2.0);
+    }
+  }
+  return result;
+}
+
+// ____________________________________________________________________________
+// Exp
+template <typename T> Matrix<T> exp(const Matrix<T> &X) {
+  Matrix<T> result(X.getRows(), X.getCols(), InitState::EMPTY);
+  for (size_t row = 0; row < X.getRows(); ++row) {
+    for (size_t col = 0; col < X.getCols(); ++col) {
+      result[row][col] = value<T>::e(X.getValue(row, col));
+    }
+  }
+  return result;
+}
+
+// ____________________________________________________________________________
 // Explicit instantiations for float.
 template Matrix<float> linear<float>(const Matrix<float> &X);
 template Matrix<float> linear_derivative<float>(const Matrix<float> &X);
@@ -99,5 +159,13 @@ template Matrix<float> relu_derivative<float>(const Matrix<float> &X);
 template Matrix<float> step<float>(const Matrix<float> &X);
 template Matrix<float> step_derivative<float>(const Matrix<float> &X);
 
+template Matrix<float> tanh<float>(const Matrix<float> &X);
+template Matrix<float> tanh_derivative<float>(const Matrix<float> &X);
+
 template Matrix<float> sigmoid<float>(const Matrix<float> &X);
 template Matrix<float> sigmoid_derivative<float>(const Matrix<float> &X);
+
+template Matrix<float> softmax<float>(const Matrix<float> &X);
+template Matrix<float> softmax_derivative<float>(const Matrix<float> &X);
+
+template Matrix<float> exp<float>(const Matrix<float> &X);

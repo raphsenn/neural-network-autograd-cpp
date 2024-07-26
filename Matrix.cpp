@@ -81,19 +81,19 @@ template <typename T>
 std::vector<T> &Matrix<T>::operator[](const std::size_t row) {
   // Handle if row >= rows_.
   if (row >= rows_) {
-    throw std::out_of_range("Row index out of range");
+    throw std::out_of_range("Row index (1) out of range");
   }
   return matrix_[row];
 };
 
 // ____________________________________________________________________________
 template <typename T>
-const std::vector<T> &Matrix<T>::operator[](const std::size_t col) const {
+const std::vector<T> &Matrix<T>::operator[](const std::size_t row) const {
   // Handle if col >= cols_.
-  if (col >= cols_) {
-    throw std::out_of_range("Col index out of range");
+  if (row >= rows_) {
+    throw std::out_of_range("Row index (2) out of range");
   }
-  return matrix_[col];
+  return matrix_[row];
 };
 
 // ____________________________________________________________________________
@@ -448,6 +448,18 @@ template <typename T> Matrix<T> dotElementWise(Matrix<T> &A, Matrix<T> &B) {
 }
 
 // ____________________________________________________________________________
+template <typename T> T sum(Matrix<T> A) {
+  // Perform element wise multiplication.
+  T res = value<T>::zero();
+  for (size_t row = 0; row < A.getRows(); ++row) {
+    for (size_t col = 0; col < A.getCols(); ++col) {
+      res += A[row][col];
+    }
+  }
+  return res;
+}
+
+// ____________________________________________________________________________
 // Explicit instantiations (for linear algebra helper functions) for int, float.
 
 template Matrix<int> dot<int>(Matrix<int> &A, Matrix<int> &B);
@@ -462,3 +474,5 @@ template Matrix<float> sub<float>(Matrix<float> &A, Matrix<float> &B);
 template Matrix<int> dotElementWise<int>(Matrix<int> &A, Matrix<int> &B);
 template Matrix<float> dotElementWise<float>(Matrix<float> &A,
                                              Matrix<float> &B);
+
+template float sum(Matrix<float> A);

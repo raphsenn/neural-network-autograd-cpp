@@ -20,6 +20,7 @@ template <> struct value<int> {
     return distribution(gen);
   }
   static int e(int x) { return std::exp(x); }
+  static int tanh(int x) { return std::tanh(x); }
 };
 
 // ____________________________________________________________________________
@@ -34,6 +35,7 @@ template <> struct value<float> {
     return distribution(gen);
   }
   static float e(float x) { return std::exp(x); }
+  static float tanh(float x) { return std::tanh(x); }
 };
 
 // ____________________________________________________________________________
@@ -48,4 +50,5 @@ template <> struct value<double> {
     return distribution(gen);
   }
   static double e(double x) { return std::exp(x); }
+  static double tanh(double x) { return std::tanh(x); }
 };
