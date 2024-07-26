@@ -106,7 +106,8 @@ template <typename T> Matrix<T> tanh_derivative(const Matrix<T> &X) {
   Matrix<T> result(X.getRows(), X.getCols(), InitState::EMPTY);
   for (size_t row = 0; row < X.getRows(); ++row) {
     for (size_t col = 0; col < X.getCols(); ++col) {
-      result[row][col] = value<T>::one() - std::pow(value<T>::tanh(X.getValue(row, col)), 2.0);
+      result[row][col] =
+          value<T>::one() - std::pow(value<T>::tanh(X.getValue(row, col)), 2.0);
     }
   }
   return result;
@@ -125,12 +126,13 @@ template <typename T> Matrix<T> softmax(const Matrix<T> &X) {
 }
 
 // ____________________________________________________________________________
-// Softmax derivative 
+// Softmax derivative
 template <typename T> Matrix<T> softmax_derivative(const Matrix<T> &X) {
   Matrix<T> result(X.getRows(), X.getCols(), InitState::EMPTY);
   for (size_t row = 0; row < X.getRows(); ++row) {
     for (size_t col = 0; col < X.getCols(); ++col) {
-      result[row][col] = value<T>::one() - std::pow(value<T>::tanh(X.getValue(row, col)), 2.0);
+      result[row][col] =
+          value<T>::one() - std::pow(value<T>::tanh(X.getValue(row, col)), 2.0);
     }
   }
   return result;

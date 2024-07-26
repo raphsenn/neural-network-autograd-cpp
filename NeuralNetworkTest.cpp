@@ -130,7 +130,7 @@ TEST(SaveAndLoad, NeuralNetwork) {
       0.88f, InitState::RANDOM);
   xorGate.train(X_train, y_train, 1, 0.1f, 10000, false);
 
-  // Save weights and biases. 
+  // Save weights and biases.
   xorGate.save("XOR_data.bin");
 
   // Create new neural net.

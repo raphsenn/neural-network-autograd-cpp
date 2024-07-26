@@ -66,8 +66,8 @@ TEST(StepDerivative, Activation) {
 
 // ____________________________________________________________________________
 TEST(Softmax, Activation) {
-  Matrix<float> X = std::vector<std::vector<float>>(
-      {{1.3f}, {5.1f}, {2.2f}, {0.7f}, {1.1f}});
+  Matrix<float> X =
+      std::vector<std::vector<float>>({{1.3f}, {5.1f}, {2.2f}, {0.7f}, {1.1f}});
   Matrix<float> y = softmax(X);
   ASSERT_EQ(areAlmostEqual(y[0][0], 0.02f), true);
   ASSERT_EQ(areAlmostEqual(y[1][0], 0.9f), true);

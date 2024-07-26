@@ -3,9 +3,13 @@
 
 #include <iostream>
 
+
 int main() {
 
   {
+    // ________________________________________________________________________
+    // Example 1:
+
     // Simplest Neural Network, no complexity.
     // This neural network learns how to halve a number.
     std::cout << "Learns how to half a number." << std::endl;
@@ -34,6 +38,9 @@ int main() {
     half.act(X_test).print();
     std::cout << "\n";
 
+    // ________________________________________________________________________
+    // Example 2:
+
     // This neural network learns how to solve the OR-Gate problem.
     std::cout << "Solving the OR-Gate problem." << std::endl;
     Matrix<float> X_train =
@@ -47,6 +54,9 @@ int main() {
     orGate.act(X_train).print();
     std::cout << "\n";
 
+    // ________________________________________________________________________
+    // Example 3:
+
     // This neural network learns how to solve the AND-Gate problem.
     std::cout << "Solving the AND-Gate problem." << std::endl;
     Matrix<float> y_train_and =
@@ -58,19 +68,23 @@ int main() {
     andGate.act(X_train).print();
     std::cout << "\n";
 
+    // ________________________________________________________________________
+    // Example 4:
+
     // This neural network learns how to solve the XOR-Gate problem.
     std::cout << "Solving the XOR-Gate problem." << std::endl;
     Matrix<float> y_train_xor =
         std::vector<std::vector<float>>({{0}, {1}, {1}, {0}});
-    
+
     NeuralNetwork<float> xorGate(
         std::vector<size_t>({2, 4, 1}),
         std::vector<Activation>({Activation::sigmoid, Activation::sigmoid}),
         0.88f, InitState::RANDOM);
-    
+
     xorGate.train(X_train, y_train_xor, 1, 0.1f, 10000, true);
     xorGate.act(X_train).print();
-    xorGate.evaluate(X, y);
+    xorGate.evaluate(X_train, y_train_xor);
+    std::cout << "\n";
   }
   return 1;
 }

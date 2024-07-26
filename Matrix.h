@@ -120,7 +120,7 @@ public:
   T getValue(const size_t row, const size_t col) const;
 
   // Prints matrix (like a numpy matrix) in human readable format.
-  void print();
+  void print() const;
 };
 
 // ____________________________________________________________________________
@@ -128,20 +128,20 @@ public:
 // ____________________________________________________________________________
 
 // Matrix multiplication.
-template <typename T> Matrix<T> dot(Matrix<T> &A, Matrix<T> &B);
+template <typename T> Matrix<T> dot(const Matrix<T> &A, const Matrix<T> &B);
 
 // Add to matrices.
-template <typename T> Matrix<T> add(Matrix<T> &A, Matrix<T> &B);
+template <typename T> Matrix<T> add(const Matrix<T> &A, const Matrix<T> &B);
 
 // Subtract two matrices.
-template <typename T> Matrix<T> sub(Matrix<T> &A, Matrix<T> &B);
+template <typename T> Matrix<T> sub(const Matrix<T> &A, const Matrix<T> &B);
 
 // Dotproduct element wise:
 // Matrix<int> A = {{1, 2}, {3, 4}};
 // Matrix<int> B = {{1, 2}, {3, 4}};
 // Matrix<int> RES = dotElementWise(A, B);
 // RES = {{1 * 1, 2 * 2}, {3 * 3, 4 * 4}}
-template <typename T> Matrix<T> dotElementWise(Matrix<T> &A, Matrix<T> &B);
+template <typename T> Matrix<T> dotElementWise(const Matrix<T> &A, const Matrix<T> &B);
 
 // Sums all entys in Matrix to one scalar.
 template <typename T> T sum(Matrix<T> A);

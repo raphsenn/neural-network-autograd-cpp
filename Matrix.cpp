@@ -289,7 +289,7 @@ template <typename T> void Matrix<T>::fillOnes() {
 }
 
 // ____________________________________________________________________________
-template <typename T> void Matrix<T>::print() {
+template <typename T> void Matrix<T>::print() const {
   std::cout << "matrix([";
   for (size_t row = 0; row < rows_; ++row) {
     std::cout << "[";
@@ -328,7 +328,7 @@ template class Matrix<double>;
 // ____________________________________________________________________________
 
 // ____________________________________________________________________________
-template <typename T> Matrix<T> dot(Matrix<T> &A, Matrix<T> &B) {
+template <typename T> Matrix<T> dot(const Matrix<T> &A, const Matrix<T> &B) {
   // Check if matrices are in the same vectorspace.
   if (A.getCols() != B.getRows()) {
     throw std::invalid_argument(
@@ -351,7 +351,7 @@ template <typename T> Matrix<T> dot(Matrix<T> &A, Matrix<T> &B) {
 }
 
 // ____________________________________________________________________________
-template <typename T> Matrix<T> add(Matrix<T> &A, Matrix<T> &B) {
+template <typename T> Matrix<T> add(const Matrix<T> &A, const Matrix<T> &B) {
   // Case 1: Scalar addition.
   // Case 1.1:
   // [[1, 2], [3, 4]] + [[10, 10]] = [[11, 12], [13, 14]]
@@ -392,7 +392,7 @@ template <typename T> Matrix<T> add(Matrix<T> &A, Matrix<T> &B) {
 }
 
 // ____________________________________________________________________________
-template <typename T> Matrix<T> sub(Matrix<T> &A, Matrix<T> &B) {
+template <typename T> Matrix<T> sub(const Matrix<T> &A, const Matrix<T> &B) {
   // Scalar addition.
   if (A.getCols() == B.getCols() && B.getRows() == 1) {
     // Perform matrix addition with scalar value.
@@ -430,7 +430,8 @@ template <typename T> Matrix<T> sub(Matrix<T> &A, Matrix<T> &B) {
 }
 
 // ____________________________________________________________________________
-template <typename T> Matrix<T> dotElementWise(Matrix<T> &A, Matrix<T> &B) {
+template <typename T>
+Matrix<T> dotElementWise(const Matrix<T> &A, const Matrix<T> &B) {
   // Check if matrices are in the same vectorspace.
   if (A.getRows() != B.getRows()) {
     throw std::invalid_argument(
@@ -462,17 +463,21 @@ template <typename T> T sum(Matrix<T> A) {
 // ____________________________________________________________________________
 // Explicit instantiations (for linear algebra helper functions) for int, float.
 
-template Matrix<int> dot<int>(Matrix<int> &A, Matrix<int> &B);
-template Matrix<float> dot<float>(Matrix<float> &A, Matrix<float> &B);
+template Matrix<int> dot<int>(const Matrix<int> &A, const Matrix<int> &B);
+template Matrix<float> dot<float>(const Matrix<float> &A,
+                                  const Matrix<float> &B);
 
-template Matrix<int> add<int>(Matrix<int> &A, Matrix<int> &B);
-template Matrix<float> add<float>(Matrix<float> &A, Matrix<float> &B);
+template Matrix<int> add<int>(const Matrix<int> &A, const Matrix<int> &B);
+template Matrix<float> add<float>(const Matrix<float> &A,
+                                  const Matrix<float> &B);
 
-template Matrix<int> sub<int>(Matrix<int> &A, Matrix<int> &B);
-template Matrix<float> sub<float>(Matrix<float> &A, Matrix<float> &B);
+template Matrix<int> sub<int>(const Matrix<int> &A, const Matrix<int> &B);
+template Matrix<float> sub<float>(const Matrix<float> &A,
+                                  const Matrix<float> &B);
 
-template Matrix<int> dotElementWise<int>(Matrix<int> &A, Matrix<int> &B);
-template Matrix<float> dotElementWise<float>(Matrix<float> &A,
-                                             Matrix<float> &B);
+template Matrix<int> dotElementWise<int>(const Matrix<int> &A,
+                                         const Matrix<int> &B);
+template Matrix<float> dotElementWise<float>(const Matrix<float> &A,
+                                             const Matrix<float> &B);
 
 template float sum(Matrix<float> A);

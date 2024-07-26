@@ -176,42 +176,46 @@ template <typename T> void NeuralNetwork<T>::backward(Matrix<T> y) {
 
 // ____________________________________________________________________________
 // Loss:
-template <typename T> float NeuralNetwork<T>::loss(Matrix<T>& out, Matrix<T>& y) {
+template <typename T>
+float NeuralNetwork<T>::loss(Matrix<T> &out, Matrix<T> &y) {
   Matrix<T> diff = sub(y, out); // Element-wise subtraction
   Matrix<T> squared_diff = dotElementWise(diff, diff); // Element-wise squaring
-  float loss = static_cast<float>(sum(squared_diff)) / static_cast<float>(y.getCols() * y.getRows());
-  return loss; 
+  float loss = static_cast<float>(sum(squared_diff)) /
+               static_cast<float>(y.getCols() * y.getRows());
+  return loss;
 }
 
 // ____________________________________________________________________________
 // Accuracy:
-template <typename T> float NeuralNetwork<T>::getAccuracy(Matrix<T>& out, Matrix<T>& y, float threshold) {
-    size_t correctCount = 0;
-    size_t numRows = out.getRows();
-    
-    // Ensure matrices have the same number of rows
-    if (numRows != y.getRows()) {
-        throw std::invalid_argument("Dimensions of output and labels do not match.");
-    }
+template <typename T>
+float NeuralNetwork<T>::getAccuracy(Matrix<T> &out, Matrix<T> &y,
+                                    float threshold) {
+  size_t correctCount = 0;
+  size_t numRows = out.getRows();
 
-    // Loop through each row in the output matrix
-    for (size_t i = 0; i < numRows; ++i) {
-        // Get the predicted class based on the threshold
-        T predictedClass = out[i][0] >= threshold ? 1 : 0;
-        
-        // Get the true class from the label matrix
-        int trueClass = y[i][0];
-        
-        // Check if the prediction matches the true class
-        if (predictedClass == trueClass) {
-            correctCount++;
-        }
-    }
+  // Ensure matrices have the same number of rows
+  if (numRows != y.getRows()) {
+    throw std::invalid_argument(
+        "Dimensions of output and labels do not match.");
+  }
 
-    // Calculate accuracy
-    return static_cast<float>(correctCount) / static_cast<float>(numRows);
+  // Loop through each row in the output matrix
+  for (size_t i = 0; i < numRows; ++i) {
+    // Get the predicted class based on the threshold
+    T predictedClass = out[i][0] >= threshold ? 1 : 0;
+
+    // Get the true class from the label matrix
+    int trueClass = y[i][0];
+
+    // Check if the prediction matches the true class
+    if (predictedClass == trueClass) {
+      correctCount++;
+    }
+  }
+
+  // Calculate accuracy
+  return static_cast<float>(correctCount) / static_cast<float>(numRows);
 }
-
 
 // ____________________________________________________________________________
 template <typename T>
@@ -232,7 +236,8 @@ void NeuralNetwork<T>::train(Matrix<T> X, Matrix<T> y, size_t batch_size,
     backward(y);
     if (verbose) {
       if (epoch % 100 == 0) {
-        std::cout << "Epoch: " << epoch << ", Loss (MSE): " << loss(output, y) <<", Accuracy: "<< getAccuracy(output, y) << std::endl;
+        std::cout << "Epoch: " << epoch << ", Loss (MSE): " << loss(output, y)
+                  << ", Accuracy: " << getAccuracy(output, y) << std::endl;
       }
     }
   }
@@ -245,10 +250,10 @@ template <typename T> Matrix<T> NeuralNetwork<T>::act(const Matrix<T> &X) {
 
 // ____________________________________________________________________________
 template <typename T>
-void NeuralNetwork<T>::evaluate(Matrix<T>& X, Matrix<T>& y, bool binary) {
-  // Matrix<T> y_out = act(X);
-  // float accuracy = getAccuracy(y_out, y);
-  // std::cout << "Accuracy: " << 100 * accuracy << "%" << std::endl;
+void NeuralNetwork<T>::evaluate(Matrix<T> &X, Matrix<T> &y, bool binary) {
+  Matrix<T> y_out = act(X);
+  float accuracy = getAccuracy(y_out, y);
+  std::cout << "Accuracy: " << 100 * accuracy << "%" << std::endl;
 }
 
 // ____________________________________________________________________________
