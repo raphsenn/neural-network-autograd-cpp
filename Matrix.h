@@ -141,7 +141,8 @@ template <typename T> Matrix<T> sub(const Matrix<T> &A, const Matrix<T> &B);
 // Matrix<int> B = {{1, 2}, {3, 4}};
 // Matrix<int> RES = dotElementWise(A, B);
 // RES = {{1 * 1, 2 * 2}, {3 * 3, 4 * 4}}
-template <typename T> Matrix<T> dotElementWise(const Matrix<T> &A, const Matrix<T> &B);
+template <typename T>
+Matrix<T> dotElementWise(const Matrix<T> &A, const Matrix<T> &B);
 
 // Sums all entys in Matrix to one scalar.
 template <typename T> T sum(Matrix<T> A);

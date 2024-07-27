@@ -21,7 +21,7 @@ TEST(LearnsToHalfeRealNumbers, NeuralNetwork) {
   NeuralNetwork<float> nn(std::vector<size_t>({1, 1}),
                           std::vector<Activation>({Activation::linear}), 0.01f,
                           InitState::RANDOM);
-  nn.train(X_train, y_train, 1, 0.1f, 10000, false);
+  nn.train(X_train, y_train, 0.1f, 10000, false);
   Matrix<float> X_test = std::vector<std::vector<float>>({{-3},
                                                           {-2},
                                                           {-1},
@@ -61,7 +61,7 @@ TEST(AndGate, NeuralNetwork) {
   NeuralNetwork<float> nn(std::vector<size_t>({2, 1}),
                           std::vector<Activation>({Activation::sigmoid}), 0.1f,
                           InitState::RANDOM);
-  nn.train(X_train, y_train, 1, 0.1f, 10000, false);
+  nn.train(X_train, y_train, 0.1f, 10000, false);
   Matrix<float> y_out = nn.act(X_train);
   ASSERT_EQ(areAlmostEqual(y_out[0][0], 0.0f), true);
   ASSERT_EQ(areAlmostEqual(y_out[1][0], 0.0f), true);
@@ -78,7 +78,7 @@ TEST(OrGate, NeuralNetwork) {
   NeuralNetwork<float> orGate(std::vector<size_t>({2, 1}),
                               std::vector<Activation>({Activation::sigmoid}),
                               0.1f, InitState::RANDOM);
-  orGate.train(X_train, y_train, 1, 0.1f, 10000, false);
+  orGate.train(X_train, y_train, 0.1f, 10000, false);
   Matrix<float> y_out = orGate.act(X_train);
   ASSERT_EQ(areAlmostEqual(y_out[0][0], 0.0f), true);
   ASSERT_EQ(areAlmostEqual(y_out[1][0], 1.0f), true);
@@ -96,7 +96,7 @@ TEST(XorGate, NeuralNetwork) {
       std::vector<size_t>({2, 4, 1}),
       std::vector<Activation>({Activation::sigmoid, Activation::sigmoid}),
       0.88f, InitState::RANDOM);
-  xorGate.train(X_train, y_train, 1, 0.1f, 10000, false);
+  xorGate.train(X_train, y_train, 0.1f, 10000, false);
   Matrix<float> y_out = xorGate.act(X_train);
   ASSERT_EQ(areAlmostEqual(y_out[0][0], 0.0f, 0.2f), true);
   ASSERT_EQ(areAlmostEqual(y_out[1][0], 1.0f, 0.2f), true);
@@ -112,7 +112,7 @@ TEST(NotGate, NeuralNetwork) {
   NeuralNetwork<float> nn(std::vector<size_t>({1, 1}),
                           std::vector<Activation>({Activation::sigmoid}), 0.1f,
                           InitState::RANDOM);
-  nn.train(X_train, y_train, 1, 0.1f, 10000, false);
+  nn.train(X_train, y_train, 0.1f, 10000, false);
   Matrix<float> y_out = nn.act(X_train);
   ASSERT_EQ(areAlmostEqual(y_out[0][0], 1.0f), true);
   ASSERT_EQ(areAlmostEqual(y_out[1][0], 0.0f), true);
@@ -128,7 +128,7 @@ TEST(SaveAndLoad, NeuralNetwork) {
       std::vector<size_t>({2, 4, 1}),
       std::vector<Activation>({Activation::sigmoid, Activation::sigmoid}),
       0.88f, InitState::RANDOM);
-  xorGate.train(X_train, y_train, 1, 0.1f, 10000, false);
+  xorGate.train(X_train, y_train, 0.1f, 10000, false);
 
   // Save weights and biases.
   xorGate.save("XOR_data.bin");

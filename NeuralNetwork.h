@@ -65,25 +65,25 @@ public:
   // Training and evaluation:
 
   // Trains the neural net.
-  void train(Matrix<T> X, Matrix<T> y, size_t batchSize = 1,
+  void train(Matrix<T> X, Matrix<T> y,
              float learningRate = 0.1f, int epochs = 1, bool verbose = false);
 
   // Generates an output with input data X.
   Matrix<T> act(const Matrix<T> &X);
 
   // Calculate loss (Mean Squared Error).
-  float loss(Matrix<T>& out, Matrix<T>& y);
+  float loss(Matrix<T> &out, Matrix<T> &y);
 
   // Calculates accuracy.
-  float getAccuracy(Matrix<T>& out, Matrix<T>& y, float threshold=0.3f);
+  float getAccuracy(Matrix<T> &out, Matrix<T> &y, float threshold = 0.3f);
 
   // Evaluates neural net.
   // Calculates performance metrics precision, recall and accuracy.
   // Prints performance metrics.
-  void evaluate(Matrix<T>& X, Matrix<T>& y, bool binary=false);
+  void evaluate(Matrix<T> &X, Matrix<T> &y);
 
   // Saves weights and biases to binary file.
-  void save(std::string fileName="neural_network_data.bin");
+  void save(std::string fileName = "neural_network_data.bin");
 
   // Loads weights and biases from a binary file.
   void load(std::string fileName);

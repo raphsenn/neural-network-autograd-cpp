@@ -359,4 +359,9 @@ TEST(subFunctionn, sub) {
   ASSERT_EQ(C[2][0], 0);
   ASSERT_EQ(C[2][1], 0);
   ASSERT_EQ(C[2][2], 0);
+
+  Matrix<float> D(100, 10, InitState::ONES);
+  Matrix<float> E(100, 10, InitState::ONES);
+  Matrix<float> F = sub(D, E);
+  EXPECT_EQ(F, Matrix<float>(100, 10, InitState::ZERO));
 }

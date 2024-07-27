@@ -42,5 +42,5 @@ template <typename T> Matrix<T> softmax(const Matrix<T> &X);
 template <typename T> Matrix<T> softmax_derivative(const Matrix<T> &X);
 
 // ____________________________________________________________________________
-// EXP 
+// EXP
 template <typename T> Matrix<T> exp(Matrix<T> &X);

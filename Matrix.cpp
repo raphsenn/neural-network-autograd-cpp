@@ -63,8 +63,8 @@ Matrix<T> &Matrix<T>::operator=(const std::vector<std::vector<T>> other) {
   if (rows_ != other.size() || cols_ != other[0].size()) {
     rows_ = static_cast<size_t>(other.size());
     cols_ = static_cast<size_t>(other[0].size());
-    matrix_ = std::vector<std::vector<T>>(other.size(),
-                                          std::vector<T>(other[0].size()));
+    matrix_.clear();
+    matrix_.resize(rows_, std::vector<T>(cols_));
   }
 
   // Perform copy.
@@ -377,7 +377,7 @@ template <typename T> Matrix<T> add(const Matrix<T> &A, const Matrix<T> &B) {
   }
   // Case 2: Addition of Matrix in same vectorspace.
   // Check if matrices are in the same vectorspace.
-  if (A.getRows() != B.getCols() || A.getCols() != B.getCols()) {
+  if (A.getRows() != B.getRows() || A.getCols() != B.getCols()) {
     throw std::invalid_argument(
         "Matrices dimensions do not match for addition.");
   }
@@ -416,7 +416,7 @@ template <typename T> Matrix<T> sub(const Matrix<T> &A, const Matrix<T> &B) {
   }
 
   // Check if matrices are in the same vectorspace.
-  if (A.getRows() != B.getCols() || A.getCols() != B.getCols()) {
+  if (A.getRows() != B.getRows() || A.getCols() != B.getCols()) {
     throw std::invalid_argument("Matrices dimensions do not match for sub.");
   }
   // Perform matrix addition.

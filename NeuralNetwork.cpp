@@ -158,19 +158,18 @@ template <typename T> void NeuralNetwork<T>::backward(Matrix<T> y) {
 
   // Update weights and biases.
   for (size_t i = 0; i < numLayers_ - 1; ++i) {
+
     // Compute weight gradients
-    // dW = A_[i].transpose() * delta[i]
     Matrix<T> A_i_transposed = std::move(A_[i].transpose_copy());
     Matrix<T> dW = std::move(dot(A_i_transposed, deltas[i]));
     // Update weights.
     dW = dW.scalMul(learningRate_);
-    weights_[i].add(dW);
+    weights_[i] = std::move(add(weights_[i], dW));
 
     // Compute bias gradients
-    // dB = sum(delta[i]) * learningRate.
     Matrix<T> dB = deltas[i].sum(1).scalMul(learningRate_);
     // Update Biases
-    biases_[i] = add(biases_[i], dB);
+    biases_[i] = std::move(add(biases_[i], dB));
   }
 }
 
@@ -219,7 +218,7 @@ float NeuralNetwork<T>::getAccuracy(Matrix<T> &out, Matrix<T> &y,
 
 // ____________________________________________________________________________
 template <typename T>
-void NeuralNetwork<T>::train(Matrix<T> X, Matrix<T> y, size_t batch_size,
+void NeuralNetwork<T>::train(Matrix<T> X, Matrix<T> y,
                              float learning_rate, int epochs, bool verbose) {
   if (learning_rate != 0.1f) {
     learningRate_ = learning_rate;
@@ -227,7 +226,6 @@ void NeuralNetwork<T>::train(Matrix<T> X, Matrix<T> y, size_t batch_size,
   if (verbose) {
     std::cout << "Start training NeuralNetwork with parameters: " << std::endl;
     std::cout << "LearningRate: " << learningRate_ << std::endl;
-    std::cout << "Batch Size: " << batch_size << std::endl;
     std::cout << "Epochs: " << epochs << std::endl;
   }
   // Start training the NeuralNetwork.
@@ -235,7 +233,7 @@ void NeuralNetwork<T>::train(Matrix<T> X, Matrix<T> y, size_t batch_size,
     Matrix<T> output = forward(X);
     backward(y);
     if (verbose) {
-      if (epoch % 100 == 0) {
+      if (epoch % 1 == 0) {
         std::cout << "Epoch: " << epoch << ", Loss (MSE): " << loss(output, y)
                   << ", Accuracy: " << getAccuracy(output, y) << std::endl;
       }
@@ -250,7 +248,7 @@ template <typename T> Matrix<T> NeuralNetwork<T>::act(const Matrix<T> &X) {
 
 // ____________________________________________________________________________
 template <typename T>
-void NeuralNetwork<T>::evaluate(Matrix<T> &X, Matrix<T> &y, bool binary) {
+void NeuralNetwork<T>::evaluate(Matrix<T> &X, Matrix<T> &y) {
   Matrix<T> y_out = act(X);
   float accuracy = getAccuracy(y_out, y);
   std::cout << "Accuracy: " << 100 * accuracy << "%" << std::endl;

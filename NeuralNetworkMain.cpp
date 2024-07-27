@@ -3,7 +3,6 @@
 
 #include <iostream>
 
-
 int main() {
 
   {
@@ -20,7 +19,7 @@ int main() {
     NeuralNetwork<float> half(std::vector<size_t>({1, 1}),
                               std::vector<Activation>({Activation::linear}),
                               0.01f, InitState::RANDOM);
-    half.train(X, y, 1, 0.1f, 1000, false);
+    half.train(X, y, 0.1f, 1000, false);
     Matrix<float> X_test = std::vector<std::vector<float>>({{-3},
                                                             {-2},
                                                             {-1},
@@ -50,7 +49,7 @@ int main() {
     NeuralNetwork<float> orGate(std::vector<size_t>({2, 1}),
                                 std::vector<Activation>({Activation::sigmoid}),
                                 0.1f, InitState::RANDOM);
-    orGate.train(X_train, y_train_or, 1, 0.1f, 10000, false);
+    orGate.train(X_train, y_train_or, 0.1f, 10000, false);
     orGate.act(X_train).print();
     std::cout << "\n";
 
@@ -64,7 +63,7 @@ int main() {
     NeuralNetwork<float> andGate(std::vector<size_t>({2, 1}),
                                  std::vector<Activation>({Activation::sigmoid}),
                                  0.1f, InitState::RANDOM);
-    andGate.train(X_train, y_train_and, 1, 0.1f, 10000, false);
+    andGate.train(X_train, y_train_and, 0.1f, 10000, false);
     andGate.act(X_train).print();
     std::cout << "\n";
 
@@ -81,7 +80,7 @@ int main() {
         std::vector<Activation>({Activation::sigmoid, Activation::sigmoid}),
         0.88f, InitState::RANDOM);
 
-    xorGate.train(X_train, y_train_xor, 1, 0.1f, 10000, true);
+    xorGate.train(X_train, y_train_xor, 0.1f, 10000, false);
     xorGate.act(X_train).print();
     xorGate.evaluate(X_train, y_train_xor);
     std::cout << "\n";

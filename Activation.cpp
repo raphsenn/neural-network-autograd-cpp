@@ -116,25 +116,40 @@ template <typename T> Matrix<T> tanh_derivative(const Matrix<T> &X) {
 // ____________________________________________________________________________
 // Softmax
 template <typename T> Matrix<T> softmax(const Matrix<T> &X) {
-  Matrix<T> result(X.getRows(), X.getCols(), InitState::EMPTY);
-  for (size_t row = 0; row < X.getRows(); ++row) {
-    for (size_t col = 0; col < X.getCols(); ++col) {
-      result[row][col] = value<T>::e(X.getValue(row, col)) / sum(exp(X));
+  size_t rows = X.getRows();
+  size_t cols = X.getCols();
+  Matrix<T> result(rows, cols, InitState::EMPTY);
+
+  for (size_t col = 0; col < cols; ++col) {
+    T sum_exp = 0;
+    // Compute the sum of exponentials
+    for (size_t row = 0; row < rows; ++row) {
+      sum_exp += std::exp(X.getValue(row, col));
+    }
+    // Normalize by the sum of exponentials
+    for (size_t row = 0; row < rows; ++row) {
+      result[row][col] = std::exp(X.getValue(row, col)) / sum_exp;
     }
   }
+
   return result;
 }
 
 // ____________________________________________________________________________
 // Softmax derivative
 template <typename T> Matrix<T> softmax_derivative(const Matrix<T> &X) {
-  Matrix<T> result(X.getRows(), X.getCols(), InitState::EMPTY);
-  for (size_t row = 0; row < X.getRows(); ++row) {
-    for (size_t col = 0; col < X.getCols(); ++col) {
-      result[row][col] =
-          value<T>::one() - std::pow(value<T>::tanh(X.getValue(row, col)), 2.0);
+  Matrix<T> softmax_vals = softmax(X);
+  size_t rows = X.getRows();
+  size_t cols = X.getCols();
+  Matrix<T> result(rows, cols, InitState::EMPTY);
+
+  for (size_t row = 0; row < rows; ++row) {
+    for (size_t col = 0; col < cols; ++col) {
+      T s = softmax_vals.getValue(row, col);
+      result[row][col] = s * (1 - s);
     }
   }
+
   return result;
 }
 
