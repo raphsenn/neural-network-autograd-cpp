@@ -65,8 +65,8 @@ public:
   // Training and evaluation:
 
   // Trains the neural net.
-  void train(Matrix<T> X, Matrix<T> y,
-             float learningRate = 0.1f, int epochs = 1, bool verbose = false);
+  void train(Matrix<T> X, Matrix<T> y, float learningRate = 0.1f,
+             int epochs = 1, bool verbose = false);
 
   // Generates an output with input data X.
   Matrix<T> act(const Matrix<T> &X);

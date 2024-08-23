@@ -218,8 +218,8 @@ float NeuralNetwork<T>::getAccuracy(Matrix<T> &out, Matrix<T> &y,
 
 // ____________________________________________________________________________
 template <typename T>
-void NeuralNetwork<T>::train(Matrix<T> X, Matrix<T> y,
-                             float learning_rate, int epochs, bool verbose) {
+void NeuralNetwork<T>::train(Matrix<T> X, Matrix<T> y, float learning_rate,
+                             int epochs, bool verbose) {
   if (learning_rate != 0.1f) {
     learningRate_ = learning_rate;
   }
